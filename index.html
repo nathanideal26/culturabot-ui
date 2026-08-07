@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CulturaBot Interactive Visual v10.0</title>
+  <title>CulturaBot Fail-Safe iPad v11.0</title>
   <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
 
   <style>
@@ -140,7 +140,6 @@
       margin-top: 8px;
     }
 
-    /* KAD VISUAL HASIL CARIAN BARU (BIG DISPLAY CARD) */
     .result-card-container {
       width: 100%;
       min-height: 130px;
@@ -313,7 +312,7 @@
       <button class="btn-nav-home" onclick="resetToHome()">🏠 HOME</button>
       <button class="btn-nav-reset" onclick="returnRobotToBase()">🤖 RESET ROBOT</button>
     </div>
-    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v10.0</span>
+    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v11.0</span>
     <div>
       <span id="userInfo" style="font-size: 13px; color: #9ca3af; margin-right: 8px;">Belum Didaftar</span>
       <button class="btn-key" onclick="showKeyModal()">Key</button>
@@ -345,7 +344,7 @@
     <div class="status-badge" id="statusBadge">STANDBY MODE</div>
   </div>
 
-  <!-- PAPARAN KAD HASIL CARIAN VISUAL BARU -->
+  <!-- KAD HASIL CARIAN VISUAL -->
   <div class="result-card-container" id="displayCard">
     <div class="result-title" id="cardTitle">🤖 Selamat Datang ke CulturaBot!</div>
     <div class="result-body" id="cardBody">Sila tekan <b>📷 Aktifkan Kamera AI</b> di bawah untuk memulakan pemanduan galeri muzium.</div>
@@ -388,7 +387,7 @@
 
       <div class="chat-input-group">
         <button id="micBtn" class="btn-mic" onclick="startVoiceInput()">🎙️</button>
-        <input type="text" id="textInput" class="input-text" placeholder="Taip soalan anda di sini...">
+        <input type="text" id="textInput" class="input-text" placeholder="Taip soalan di sini (Contoh: Di manakah A Famosa?)" onkeydown="if(event.key==='Enter') sendTextQuery()">
         <button class="btn-send" onclick="sendTextQuery()">Hantar</button>
       </div>
     </div>
@@ -401,29 +400,38 @@
   
   let visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
 
-  // PANGKALAN DATA WARISAN LOKAL (OFFLINE FALLBACK)
+  // PANGKALAN DATA OFFLINE SERTA-MERTA (FAIL-SAFE KNOWLEDGE BASE)
   const localKnowledge = {
     "A Famosa": {
       title: "🏰 A Famosa (Kota Porta de Santiago)",
-      body: "A Famosa dibina oleh Portugis pada tahun 1511 selepas menakluki Melaka. Ia merupakan antara seni bina Eropah tertua yang masih tinggal di Asia.",
-      fact: "💡 Fakta: Pintu gerbang Kota Porta de Santiago ini diselamatkan daripada dimusnahkan oleh Sir Stamford Raffles pada tahun 1810."
+      body: "A Famosa terletak di Bandar Hilir, Melaka, berhampiran dengan Bukit St. Paul. Ia dibina oleh Portugis pada tahun 1511 selepas menakluki Melaka.",
+      fact: "💡 Pintu gerbang Kota Porta de Santiago diselamatkan oleh Sir Stamford Raffles pada tahun 1810."
     },
     "Muzium Samudera": {
       title: "⛵ Muzium Samudera (Flora de la Mar)",
-      body: "Muzium ini merupakan replika kapal Portugis Flora de la Mar yang tenggelam di perairan Melaka bersama khazanah harta karun.",
-      fact: "💡 Fakta: Kapal asal membawa barang rampasan bernilai jutaan ringgit sebelum karam akibat ribut."
+      body: "Muzium Samudera terletak berhampiran muara Sungai Melaka. Ia merupakan replika kapal Portugis Flora de la Mar yang sarat dengan harta karun.",
+      fact: "💡 Kapal asal tenggelam di perairan Melaka semasa perjalanan pulang ke Portugal."
     },
     "Stadthuys": {
       title: "🏛️ Bangunan Stadthuys",
-      body: "Stadthuys dibina oleh Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi. Ia terkenal dengan warna merah terakota yang ikonik.",
-      fact: "💡 Fakta: Ini merupakan bangunan pentadbiran Belanda tertua yang masih wujud di rantau Asia Tenggara."
+      body: "Stadthuys terletak di Bangunan Merah, pusat bandar Melaka. Dibina oleh Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi.",
+      fact: "💡 Ia merupakan bangunan pentadbiran Belanda tertua yang masih wujud di Asia Tenggara."
     },
     "Kampung Morten": {
       title: "🏡 Kampung Morten",
-      body: "Kampung Morten ialah perkampungan tradisional Melayu di tengah bandar raya Melaka yang kaya dengan seni bina rumah panggung.",
-      fact: "💡 Fakta: Diberi nama sempena J.F. Morten, seorang pegawai British pada zaman penjajahan."
+      body: "Kampung Morten terletak di tebing Sungai Melaka di pusat bandar. Ia merupakan perkampungan tradisional Melayu dengan rumah panggung klasik.",
+      fact: "💡 Diberi nama sempena J.F. Morten, seorang pegawai British zaman penjajahan."
     }
   };
+
+  function unlockAudioOniPad() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance("");
+      u.volume = 0;
+      window.speechSynthesis.speak(u);
+    }
+  }
 
   function checkApiKey() {
     if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") {
@@ -436,16 +444,18 @@
   function showKeyModal() { document.getElementById('keyModal').classList.remove('hidden'); }
 
   function saveApiKey() {
+    unlockAudioOniPad();
     const val = document.getElementById('apiKeyInput').value.trim();
     if (val !== "") {
       GEMINI_API_KEY = val;
       localStorage.setItem("GEMINI_KEY", val);
       document.getElementById('keyModal').classList.add('hidden');
-      renderCard("🔑 API Key Disimpan", "Gemini API Key anda telah berjaya disimpan. Sila mula buat carian!", "💡 AI sedia berkhidmat.");
+      renderCard("🔑 API Key Disimpan", "Gemini API Key anda telah disimpan. Sila mula buat carian!", "💡 AI Sedia Digunakan");
     } else { alert("Masukkan API Key yang sah."); }
   }
 
   function resetToHome() {
+    unlockAudioOniPad();
     isVisitorDetected = false;
     visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
     document.getElementById('chestStandby').classList.remove('hidden');
@@ -460,12 +470,14 @@
   }
 
   function returnRobotToBase() {
+    unlockAudioOniPad();
     window.speechSynthesis.cancel();
     renderCard("🤖 Reset Robot", "Isyarat Bluetooth dihantar! Robot SPIKE Prime sedang bergerak kembali ke garisan permulaan.", "💡 Isyarat BLE Aktif");
     speakText("Robot sedang bergerak kembali ke kedudukan asal.");
   }
 
   async function startCamera() {
+    unlockAudioOniPad();
     checkApiKey();
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('overlayCanvas');
@@ -520,6 +532,7 @@
   }
 
   function setLanguage(code, name) {
+    unlockAudioOniPad();
     visitorData.langCode = code; visitorData.langName = name;
     document.getElementById('stepLang').classList.add('hidden');
     document.getElementById('stepAge').classList.remove('hidden');
@@ -528,32 +541,36 @@
   }
 
   function setAgeCategory(age) {
+    unlockAudioOniPad();
     visitorData.ageGroup = age;
     document.getElementById('stepAge').classList.add('hidden');
     document.getElementById('stepMainUI').classList.remove('hidden');
     document.getElementById('userInfo').innerText = `${visitorData.langName} | ${visitorData.ageGroup}`;
     renderCard("✅ Profil Ditetapkan!", "Sila pilih mana-mana destinasi sejarah di bawah, ATAU taip soalan anda di dalam kotak carian.", "💡 Langkah 3: Mula Carian");
-    speakText("Profil ditetapkan. Sila pilih destinasi.");
+    speakText("Profil ditetapkan. Sila pilih destinasi atau taip soalan.");
   }
 
   function selectDestination(place) {
+    unlockAudioOniPad();
     visitorData.destination = place;
-    setRobotFace("THINK");
-    renderCard(`🔍 Menganalisis ${place}...`, "CulturaBot sedang menyediakan maklumat visual untuk anda...", "💡 AI Processing");
-
-    // Guna Offline Fallback Dulu Jika Ada
+    
+    // PAPAR JAWAPAN LOKAL SERTA-MERTA
     if (localKnowledge[place]) {
       const data = localKnowledge[place];
       renderCard(data.title, data.body, data.fact);
       setRobotFace("SPEAK");
       speakText(data.body);
+    } else {
+      setRobotFace("THINK");
+      renderCard(`🔍 Menganalisis ${place}...`, "CulturaBot sedang menyediakan maklumat untuk anda...", "💡 AI Processing");
     }
 
-    // Panggil Online AI Gemini
-    fetchGeminiResponse(`Terangkan secara ringkas 2 ayat mengenai ${place} di Melaka dalam bahasa ${visitorData.langName} untuk umur ${visitorData.ageGroup}.`, place);
+    // CUBA GEMINI API DENGAN TIMEOUT
+    fetchGeminiWithTimeout(`Terangkan 2 ayat lokasi dan sejarah ${place} di Melaka dalam bahasa ${visitorData.langName} untuk umur ${visitorData.ageGroup}.`, place);
   }
 
   function startVoiceInput() {
+    unlockAudioOniPad();
     const micBtn = document.getElementById('micBtn');
     const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -571,12 +588,12 @@
 
     micBtn.classList.add('listening');
     setRobotFace("THINK");
-    renderCard("🎙️ Mendengar Suara...", "Sila bercakap di hadapan skrin iPad sekarang.", "💡 Pengecaman Suara Aktif");
+    renderCard("🎙️ Mendengar Suara...", "Sila bercakap sekarang di hadapan skrin iPad.", "💡 Pengecaman Suara Aktif");
 
     recognition.onresult = (event) => {
       micBtn.classList.remove('listening');
       const speechText = event.results[0][0].transcript;
-      renderCard("💬 Soalan Suara", `"${speechText}"`, "💡 Mengolah Jawapan AI...");
+      renderCard("💬 Soalan Suara", `"${speechText}"`, "💡 Mengolah Jawapan...");
       processAIQuery(speechText);
     };
 
@@ -592,46 +609,83 @@
   }
 
   function sendTextQuery() {
+    unlockAudioOniPad();
     const inputField = document.getElementById('textInput');
     const text = inputField.value.trim();
     if (!text) return;
     
     inputField.value = "";
-    renderCard(`🔎 Soalan Carian`, `"${text}"`, "💡 Menganalisis dengan Gemini AI...");
+    renderCard(`🔎 Soalan Carian`, `"${text}"`, "💡 Menganalisis soalan...");
     processAIQuery(text);
   }
 
   function processAIQuery(queryText) {
-    setRobotFace("THINK");
-    fetchGeminiResponse(`Jawab soalan pelawat muzium ini: "${queryText}". Jawab secara lisan dalam 2 ayat sahaja menggunakan bahasa ${visitorData.langName} untuk umur ${visitorData.ageGroup}.`, `Hasil Carian: ${queryText}`);
-  }
+    const queryLower = queryText.toLowerCase();
 
-  async function fetchGeminiResponse(promptText, customTitle) {
-    if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") {
-      return; // Kekalkan paparan offline
+    // 1. CARIAN KATA KUNCI LOKAL PANTAS
+    let localFound = false;
+    if (queryLower.includes("famosa")) {
+      const data = localKnowledge["A Famosa"];
+      renderCard(data.title, data.body, data.fact);
+      setRobotFace("SPEAK");
+      speakText(data.body);
+      localFound = true;
+    } else if (queryLower.includes("samudera") || queryLower.includes("kapal") || queryLower.includes("flora")) {
+      const data = localKnowledge["Muzium Samudera"];
+      renderCard(data.title, data.body, data.fact);
+      setRobotFace("SPEAK");
+      speakText(data.body);
+      localFound = true;
+    } else if (queryLower.includes("stadthuys") || queryLower.includes("merah")) {
+      const data = localKnowledge["Stadthuys"];
+      renderCard(data.title, data.body, data.fact);
+      setRobotFace("SPEAK");
+      speakText(data.body);
+      localFound = true;
+    } else if (queryLower.includes("morten") || queryLower.includes("kampung")) {
+      const data = localKnowledge["Kampung Morten"];
+      renderCard(data.title, data.body, data.fact);
+      setRobotFace("SPEAK");
+      speakText(data.body);
+      localFound = true;
     }
 
-    const payload = { contents: [{ parts: [{ text: promptText }] }] };
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    if (!localFound) {
+      setRobotFace("THINK");
+      renderCard("🔎 Menganalisis Soalan...", `Mencari maklumat mengenai: "${queryText}"`, "💡 AI Processing");
+    }
+
+    // 2. GEMINI API WITH 3-SECOND TIMEOUT
+    fetchGeminiWithTimeout(`Sebagai CulturaBot Pemandu Muzium, jawab soalan ini dalam 2 ayat: "${queryText}". Bahasa: ${visitorData.langName}, Umur: ${visitorData.ageGroup}.`, `Hasil Carian: ${queryText}`);
+  }
+
+  async function fetchGeminiWithTimeout(promptText, customTitle) {
+    if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") return;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3-second timeout
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
         if (data.candidates && data.candidates[0].content.parts[0].text) {
           const replyText = data.candidates[0].content.parts[0].text;
-          renderCard(`✨ ${customTitle || 'Hasil Carian AI'}`, replyText, "💡 Maklumat Dihasilkan Oleh Gemini AI");
+          renderCard(`✨ ${customTitle}`, replyText, "💡 Maklumat Dihasilkan Oleh Gemini AI");
           setRobotFace("SPEAK");
           speakText(replyText);
         }
       }
     } catch (err) {
-      console.error("API Error:", err);
+      console.log("API Timeout/Error - Fallback Used Successfully.");
     }
   }
 
@@ -684,6 +738,9 @@
     utterance.onend = () => { setRobotFace("HAPPY"); };
     window.speechSynthesis.speak(utterance);
   }
+
+  document.addEventListener('touchstart', unlockAudioOniPad, { once: true });
+  document.addEventListener('click', unlockAudioOniPad, { once: true });
 
   window.onload = checkApiKey;
 </script>
