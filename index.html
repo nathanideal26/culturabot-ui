@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CulturaBot Scanner Edition v6.2</title>
-  
+  <title>CulturaBot v6.2 Scanner</title>
   <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
 
   <style>
@@ -12,10 +11,8 @@
       --bg-color: #030712;
       --card-bg: #111827;
       --accent-cyan: #06b6d4;
-      --accent-blue: #3b82f6;
       --accent-gold: #f59e0b;
       --accent-red: #ef4444;
-      --accent-green: #10b981;
       --text-color: #f9fafb;
     }
 
@@ -23,102 +20,86 @@
 
     body {
       margin: 0;
-      padding: 12px;
+      padding: 15px;
       background-color: var(--bg-color);
       color: var(--text-color);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      overflow: hidden;
     }
 
-    /* Header Navigasi */
+    /* HEADER BERSAIZ BESAR */
     .header {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
+      padding: 12px 16px;
       background: var(--card-bg);
-      border: 1px solid #1f2937;
-      border-radius: 14px;
+      border: 2px solid #1f2937;
+      border-radius: 16px;
     }
 
     .nav-group { display: flex; gap: 10px; }
 
     .btn-nav-home {
-      background: var(--accent-red);
-      color: white;
+      background: var(--accent-red) !important;
+      color: white !important;
       border: none;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 12px 20px !important;
+      border-radius: 12px;
+      font-size: 16px !important;
       font-weight: bold;
       cursor: pointer;
     }
 
     .btn-nav-reset {
-      background: var(--accent-gold);
-      color: #030712;
+      background: var(--accent-gold) !important;
+      color: #030712 !important;
       border: none;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 12px 20px !important;
+      border-radius: 12px;
+      font-size: 16px !important;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .btn-key {
-      background: #374151;
-      color: #9ca3af;
-      border: 1px solid #4b5563;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-    }
-
-    /* WIDGET KOTAK SCANNER MUKA & AVATAR */
+    /* BINGKAI SCANNER MUKA GERGASI */
     .scanner-wrapper {
       position: relative;
-      width: 280px;
-      height: 220px;
+      width: 100% !important;
+      max-width: 500px !important;
+      height: 280px !important; /* DIPERBESARKAN DRASIK */
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 5px 0;
-      border-radius: 20px;
+      border-radius: 24px;
       overflow: hidden;
       background: #000;
-      border: 2px solid var(--accent-cyan);
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+      border: 3px solid var(--accent-cyan) !important;
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.5);
     }
 
-    /* Live Video Kamera */
     #webcam {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scaleX(-1); /* Mirror view */
-    }
-
-    /* Canvas Overlay untuk Kotak Face Detection */
-    #overlayCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
       transform: scaleX(-1);
     }
 
-    /* Robot Avatar Visual (Overlay Masa Standby) */
+    #overlayCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      transform: scaleX(-1);
+    }
+
     .robot-overlay {
       position: absolute;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       background: var(--card-bg);
       display: flex;
       justify-content: center;
@@ -127,71 +108,47 @@
     }
 
     .robot-svg {
-      width: 180px;
-      height: 180px;
-      filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.5));
+      width: 220px !important;
+      height: 220px !important;
+      filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.6));
     }
 
     .status-badge {
-      padding: 6px 20px;
-      background: rgba(6, 182, 212, 0.15);
-      border: 1px solid var(--accent-cyan);
+      padding: 8px 24px !important;
+      background: rgba(6, 182, 212, 0.2);
+      border: 2px solid var(--accent-cyan);
       color: var(--accent-cyan);
-      border-radius: 20px;
-      font-size: 15px;
-      font-weight: 700;
+      border-radius: 25px;
+      font-size: 16px !important;
+      font-weight: 800;
       letter-spacing: 1px;
     }
 
-    /* Visual AI Output Box */
+    /* DIALOG BOX JELAS */
     .dialog-box {
       width: 100%;
-      min-height: 95px;
-      max-height: 140px;
+      min-height: 110px;
       background: var(--card-bg);
-      border: 1px solid #374151;
-      border-radius: 16px;
-      padding: 14px;
-      font-size: 17px;
-      line-height: 1.4;
+      border: 2px solid #374151;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 18px !important;
+      line-height: 1.5;
       text-align: left;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      overflow-y: auto;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
-    .ai-card {
-      border-left: 4px solid var(--accent-cyan);
-      padding-left: 10px;
-    }
-
-    .ai-title {
-      font-weight: bold;
-      color: var(--accent-gold);
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-
-    .ai-fact {
-      font-size: 14px;
-      color: #9ca3af;
-      margin-top: 6px;
-      font-style: italic;
-    }
-
-    /* Panel Menu UI Dioptimumkan Saiz Butang */
+    /* PANEL BUTANG DIOPTIMUMKAN IPAD TOUCH */
     .panel-container {
       width: 100%;
       background: var(--card-bg);
-      border: 1px solid #1f2937;
-      border-radius: 16px;
-      padding: 14px;
+      border: 2px solid #1f2937;
+      border-radius: 20px;
+      padding: 16px;
     }
 
     .step-title {
-      font-size: 16px;
+      font-size: 17px !important;
       color: var(--accent-cyan);
       margin-bottom: 12px;
       text-align: center;
@@ -201,74 +158,67 @@
     .grid-options {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px !important;
     }
 
-    /* Saiz Butang Diperbesar Khas iPad Touch */
+    /* BUTANG BESAR TEBAL */
     .btn-option {
-      background: #1f2937;
-      color: white;
-      border: 2px solid #374151;
-      padding: 18px 12px;
-      border-radius: 14px;
-      font-size: 18px;
-      font-weight: 700;
+      background: #1f2937 !important;
+      color: white !important;
+      border: 2px solid #374151 !important;
+      padding: 22px 14px !important; /* TEBAL DAN MUDAH TEKAN */
+      border-radius: 16px !important;
+      font-size: 20px !important; /* TEKS BESAR */
+      font-weight: 800 !important;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .btn-option:active {
       transform: scale(0.96);
-      border-color: var(--accent-cyan);
-      background: #374151;
+      border-color: var(--accent-cyan) !important;
+      background: #374151 !important;
     }
 
     .chat-input-group {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
       width: 100%;
     }
 
     .input-text {
       flex: 1;
       background: #030712;
-      border: 1px solid #374151;
+      border: 2px solid #374151;
       color: white;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 17px;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 18px !important;
     }
 
     .btn-mic {
       background: #0284c7;
       border: none;
       color: white;
-      padding: 14px 22px;
-      border-radius: 12px;
-      font-size: 22px;
+      padding: 16px 26px !important;
+      border-radius: 14px;
+      font-size: 24px !important;
       cursor: pointer;
-    }
-
-    .btn-mic.listening {
-      background: #dc2626;
-      animation: pulseGlow 1s infinite;
     }
 
     .btn-send {
       background: #0d9488;
       border: none;
       color: white;
-      padding: 14px 22px;
-      border-radius: 12px;
-      font-size: 17px;
+      padding: 16px 24px !important;
+      border-radius: 14px;
+      font-size: 18px !important;
       font-weight: bold;
     }
 
-    /* Modal Key */
     .key-modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -283,11 +233,10 @@
 
     .key-modal-box {
       background: var(--card-bg);
-      border: 1px solid var(--accent-cyan);
-      padding: 25px;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 450px;
+      border: 2px solid var(--accent-cyan);
+      padding: 30px;
+      border-radius: 20px;
+      width: 100%; max-width: 480px;
       text-align: center;
     }
 
@@ -296,66 +245,62 @@
 </head>
 <body>
 
-  <!-- Modal API Key -->
+  <!-- MODAL KEY -->
   <div id="keyModal" class="key-modal hidden">
     <div class="key-modal-box">
-      <h3 style="color: var(--accent-cyan); margin-top: 0;">SETUP GEMINI API KEY</h3>
-      <p style="font-size: 14px; color: #9ca3af;">Masukkan Gemini API Key untuk mengaktifkan AI CulturaBot.</p>
+      <h3 style="color: var(--accent-cyan); margin-top: 0; font-size: 22px;">SETUP GEMINI API KEY</h3>
+      <p style="font-size: 15px; color: #9ca3af;">Masukkan Gemini API Key untuk mengaktifkan AI CulturaBot.</p>
       <input type="text" id="apiKeyInput" class="input-text" placeholder="Tampal API Key (AIzaSy...)" style="width: 100%; margin: 15px 0;">
-      <button class="btn-send" style="width: 100%; padding: 14px;" onclick="saveApiKey()">Simpan & Mula</button>
+      <button class="btn-send" style="width: 100%; padding: 16px;" onclick="saveApiKey()">Simpan & Mula</button>
     </div>
   </div>
 
-  <!-- Header Navigasi -->
+  <!-- HEADER -->
   <div class="header">
     <div class="nav-group">
       <button class="btn-nav-home" onclick="resetToHome()">🏠 HOME</button>
       <button class="btn-nav-reset" onclick="returnRobotToBase()">🤖 RESET ROBOT</button>
     </div>
-    <span style="font-weight: bold; font-size: 15px; color: var(--accent-cyan);">CULTURABOT v6.2</span>
+    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v6.2</span>
     <div>
-      <span id="userInfo" style="font-size: 12px; color: #9ca3af; margin-right: 6px;">Belum Didaftar</span>
-      <button class="btn-key" onclick="showKeyModal()">Key</button>
+      <span id="userInfo" style="font-size: 13px; color: #9ca3af; margin-right: 8px;">Belum Didaftar</span>
+      <button style="background:#374151; color:#fff; border:none; padding:8px 12px; border-radius:8px;" onclick="showKeyModal()">Key</button>
     </div>
   </div>
 
-  <!-- WIDGET SCANNER MUKA + AVATAR OVERLAY -->
+  <!-- SCANNER MUKA GERGASI -->
   <div class="scanner-wrapper">
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="overlayCanvas"></canvas>
     
-    <!-- Robot Avatar (Dipaparkan sebelum imbasan bermula) -->
     <div id="robotOverlay" class="robot-overlay">
       <svg class="robot-svg" viewBox="0 0 200 200" fill="none">
         <rect x="25" y="30" width="150" height="130" rx="28" fill="#111827" stroke="#374151" stroke-width="5"/>
         <path d="M50 20 L150 20" stroke="#06b6d4" stroke-width="5" stroke-linecap="round"/>
         <circle cx="100" cy="15" r="7" fill="#06b6d4"/>
         <rect x="40" y="50" width="120" height="90" rx="18" fill="#030712" stroke="#1f2937" stroke-width="3"/>
-        <circle id="eyeLeft" cx="72" cy="85" r="14" fill="#06b6d4"/>
-        <circle id="eyeRight" cx="128" cy="85" r="14" fill="#06b6d4"/>
-        <path id="mouthLine" d="M 70 110 Q 100 135 130 110" stroke="#06b6d4" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <circle cx="72" cy="85" r="14" fill="#06b6d4"/>
+        <circle cx="128" cy="85" r="14" fill="#06b6d4"/>
+        <path d="M 70 110 Q 100 135 130 110" stroke="#06b6d4" stroke-width="5" stroke-linecap="round" fill="none"/>
       </svg>
     </div>
   </div>
 
   <div class="status-badge" id="statusBadge">STANDBY MODE</div>
 
-  <!-- Dialog Output -->
+  <!-- DIALOG BOX -->
   <div class="dialog-box" id="dialogBox">
     <div>Tekan <b>📷 Aktifkan Kamera AI</b> di bawah untuk memulakan pemanduan galeri.</div>
   </div>
 
-  <!-- Panel Kawalan Utama -->
+  <!-- PANEL KAWALAN -->
   <div class="panel-container">
-    
-    <!-- Mod Permulaan Kamera -->
     <div id="stepStart">
-      <button class="btn-option" style="width: 100%; background: #0284c7; padding: 22px; font-size: 20px;" onclick="startCamera()">📷 Aktifkan Kamera AI (Start Scan)</button>
+      <button class="btn-option" style="width: 100%; background: #0284c7 !important; padding: 24px !important; font-size: 22px !important;" onclick="startCamera()">📷 Aktifkan Kamera AI (Start Scan)</button>
     </div>
 
-    <!-- LANGKAH 1: Pilihan Bahasa -->
     <div id="stepLang" class="hidden">
-      <div class="step-title">LANGKAH 1: Sila Pilih Bahasa / Select Language / 请选择语言 / மொழியைத் தேர்ந்தெடுக்கவும்</div>
+      <div class="step-title">LANGKAH 1: Sila Pilih Bahasa / Select Language / 请选择语言</div>
       <div class="grid-options">
         <button class="btn-option" onclick="setLanguage('ms-MY', 'Bahasa Melayu')">🇲🇾 Bahasa Melayu</button>
         <button class="btn-option" onclick="setLanguage('en-US', 'English')">🇬🇧 English</button>
@@ -364,7 +309,6 @@
       </div>
     </div>
 
-    <!-- LANGKAH 2: Umur -->
     <div id="stepAge" class="hidden">
       <div class="step-title">LANGKAH 2: Sila Pilih Kategori Umur</div>
       <div class="grid-options">
@@ -374,7 +318,6 @@
       </div>
     </div>
 
-    <!-- LANGKAH 3: Destinasi & AI Chat -->
     <div id="stepMainUI" class="hidden">
       <div class="step-title">LANGKAH 3: Pilih Destinasi ATAU Tanya Soalan AI</div>
       <div class="grid-options">
@@ -385,12 +328,11 @@
       </div>
 
       <div class="chat-input-group">
-        <button id="micBtn" class="btn-mic" onclick="startVoiceInput()" title="Bercakap">🎙️</button>
-        <input type="text" id="textInput" class="input-text" placeholder="Taip soalan anda di sini...">
+        <button id="micBtn" class="btn-mic" onclick="startVoiceInput()">🎙️</button>
+        <input type="text" id="textInput" class="input-text" placeholder="Taip soalan di sini...">
         <button class="btn-send" onclick="sendTextQuery()">Hantar</button>
       </div>
     </div>
-
   </div>
 
 <script>
@@ -398,12 +340,7 @@
   let isVisitorDetected = false;
   let recognition = null;
   
-  let visitorData = {
-    langCode: "ms-MY",
-    langName: "Bahasa Melayu",
-    ageGroup: "Dewasa",
-    destination: ""
-  };
+  let visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
 
   function checkApiKey() {
     if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") {
@@ -422,36 +359,29 @@
       localStorage.setItem("GEMINI_KEY", val);
       document.getElementById('keyModal').classList.add('hidden');
       updateDialog("API Key disimpan!");
-    } else {
-      alert("Masukkan API Key yang sah.");
-    }
+    } else { alert("Masukkan API Key yang sah."); }
   }
 
-  // Reset Home
   function resetToHome() {
     isVisitorDetected = false;
     visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
-    
     document.getElementById('robotOverlay').classList.remove('hidden');
     document.getElementById('stepLang').classList.add('hidden');
     document.getElementById('stepAge').classList.add('hidden');
     document.getElementById('stepMainUI').classList.add('hidden');
     document.getElementById('stepStart').classList.remove('hidden');
-    
     document.getElementById('userInfo').innerText = "Belum Didaftar";
     document.getElementById('statusBadge').innerText = "STANDBY MODE";
     updateDialog("Antara muka telah kembali ke Menu Utama. Tekan 'Aktifkan Kamera AI' untuk bermula.");
     window.speechSynthesis.cancel();
   }
 
-  // Reset Robot SPIKE
   function returnRobotToBase() {
     window.speechSynthesis.cancel();
-    updateDialog("<b>[ARAHAN BLE DIHANTAR]</b><br>Robot SPIKE Prime sedang bergerak kembali ke garisan permulaan (Base)...");
+    updateDialog("<b>[ARAHAN BLE DIHANTAR]</b><br>Robot SPIKE Prime bergerak ke garisan permulaan...");
     speakText("Robot sedang bergerak kembali ke kedudukan asal.");
   }
 
-  // Mula Kamera & Face Scanner Visual
   async function startCamera() {
     checkApiKey();
     const video = document.getElementById('webcam');
@@ -462,24 +392,20 @@
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
       video.srcObject = stream;
 
-      // Sembunyikan Avatar, Tunjuk Kamera Live
       document.getElementById('robotOverlay').classList.add('hidden');
       document.getElementById('stepStart').classList.add('hidden');
       document.getElementById('statusBadge').innerText = "SCANNING FOR VISITOR...";
       updateDialog("Kamera AI Aktif! Pengimbas muka sedang mengesan pelawat...");
 
       await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/');
-
       const displaySize = { width: canvas.offsetWidth, height: canvas.offsetHeight };
       faceapi.matchDimensions(canvas, displaySize);
 
       setInterval(async () => {
         if (isVisitorDetected) return;
-
         const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
         
-        // Lukis Kotak Pengesan Muka pada Canvas
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -487,115 +413,67 @@
           resizedDetections.forEach(detection => {
             const box = detection.box;
             ctx.strokeStyle = '#06b6d4';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 4;
             ctx.strokeRect(box.x, box.y, box.width, box.height);
             ctx.fillStyle = '#06b6d4';
-            ctx.font = '14px sans-serif';
-            ctx.fillText('PELAWAT DETECTED', box.x, box.y > 10 ? box.y - 5 : 10);
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillText('PELAWAT DETECTED', box.x, box.y > 10 ? box.y - 5 : 15);
           });
-
           isVisitorDetected = true;
           onVisitorAutoDetected();
         }
       }, 500);
 
     } catch (err) {
-      console.error(err);
       updateDialog("Benarkan akses kamera di Safari iPad (Settings > Safari > Camera > Allow).");
     }
   }
 
-  // Pelawat Dikesan
   function onVisitorAutoDetected() {
     document.getElementById('statusBadge').innerText = "VISITOR DETECTED";
     document.getElementById('stepLang').classList.remove('hidden');
-    
     updateDialog("<b>PELAWAT DIKESAN!</b> Sila pilih bahasa pilihan anda pada skrin.");
     speakText("Hello! Selamat datang. Sila pilih bahasa pada skrin.");
   }
 
   function setLanguage(code, name) {
-    visitorData.langCode = code;
-    visitorData.langName = name;
-    
+    visitorData.langCode = code; visitorData.langName = name;
     document.getElementById('stepLang').classList.add('hidden');
     document.getElementById('stepAge').classList.remove('hidden');
-    
-    let msg = "Sila pilih kategori umur anda.";
-    if (code === "en-US") msg = "Please select your age category.";
-    if (code === "zh-CN") msg = "请选择您的年龄组。";
-    if (code === "ta-IN") msg = "உங்கள் வயது பிரிவைத் தேர்ந்தெடுக்கவும்.";
-
-    updateDialog(msg);
-    speakText(msg);
+    updateDialog("Sila pilih kategori umur anda.");
+    speakText("Sila pilih kategori umur anda.");
   }
 
   function setAgeCategory(age) {
     visitorData.ageGroup = age;
-    
     document.getElementById('stepAge').classList.add('hidden');
     document.getElementById('stepMainUI').classList.remove('hidden');
-    
     document.getElementById('userInfo').innerText = `${visitorData.langName} | ${visitorData.ageGroup}`;
-    
-    let msg = "Profil ditetapkan! Pilih destinasi atau tekan mikrofon untuk bertanya.";
-    if (visitorData.langCode === "en-US") msg = "Profile set! Choose a destination or tap the mic to ask.";
-    
-    updateDialog(msg);
-    speakText(msg);
+    updateDialog("Profil ditetapkan! Pilih destinasi atau tekan mikrofon untuk bertanya.");
+    speakText("Profil ditetapkan.");
   }
 
   function selectDestination(place) {
     visitorData.destination = place;
     document.getElementById('statusBadge').innerText = "AI PROCESSING...";
     updateDialog(`CulturaBot sedang menganalisis maklumat ${place}...`);
-    
-    const prompt = `Gantikan peranan sebagai CulturaBot (Pemandu Muzium). Berikan respon mengenai ${place} di Melaka.
-    Format JSON SAHAJA:
-    {
-      "title": "Nama Destinasi & Emoji",
-      "speech": "Perenggan penerangan lisan (2 ayat) dalam bahasa ${visitorData.langName}, mengikut gaya umur ${visitorData.ageGroup}.",
-      "funFact": "Fakta menarik ringkas"
-    }`;
-
-    fetchGeminiVisualResponse(prompt);
+    fetchGeminiVisualResponse(`Gantikan peranan sebagai CulturaBot. Berikan respon mengenai ${place} di Melaka. Format JSON: {"title":"${place}","speech":"Penerangan 2 ayat dalam ${visitorData.langName} untuk ${visitorData.ageGroup}","funFact":"Fakta ringkas"}`);
   }
 
-  // Voice Input
   function startVoiceInput() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Buka laman ini menggunakan Safari di iPad untuk sokongan mikrofon.");
-      return;
-    }
-
-    const micBtn = document.getElementById('micBtn');
-
+    if (!SpeechRecognition) return;
     if (recognition) { try { recognition.stop(); } catch(e){} }
-
     recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
     recognition.lang = visitorData.langCode;
-
     document.getElementById('statusBadge').innerText = "LISTENING...";
-    micBtn.classList.add('listening');
     updateDialog("🎙️ <b>Mendengar...</b> Sila bercakap sekarang.");
 
     recognition.onresult = (event) => {
-      micBtn.classList.remove('listening');
       const speechText = event.results[0][0].transcript;
-      updateDialog(`Soalan Suara: "${speechText}"`);
       processAIQuery(speechText);
     };
-
-    recognition.onerror = (event) => {
-      micBtn.classList.remove('listening');
-      updateDialog("Sila tekan butang 🎙️ mikrofon sekali lagi dan bercakap.");
-      document.getElementById('statusBadge').innerText = "VISITOR DETECTED";
-    };
-
-    recognition.onend = () => { micBtn.classList.remove('listening'); };
+    recognition.onerror = () => { updateDialog("Sila tekan butang 🎙️ mikrofon sekali lagi."); };
     recognition.start();
   }
 
@@ -608,17 +486,8 @@
 
   function processAIQuery(queryText) {
     document.getElementById('statusBadge').innerText = "AI PROCESSING...";
-    updateDialog(`Menganalisis soalan: "${queryText}"...`);
-    
-    const prompt = `Gantikan peranan sebagai CulturaBot. Jawab soalan pelawat ini: "${queryText}".
-    Format JSON SAHAJA:
-    {
-      "title": "Tajuk Ringkas Jawapan & Emoji",
-      "speech": "Jawapan lisan 2 ayat dalam bahasa ${visitorData.langName} mengikut gaya umur ${visitorData.ageGroup}.",
-      "funFact": "Fakta tambahan ringkas"
-    }`;
-
-    fetchGeminiVisualResponse(prompt);
+    updateDialog(`Menganalisis: "${queryText}"...`);
+    fetchGeminiVisualResponse(`CulturaBot: Jawab soalan: "${queryText}". JSON: {"title":"Jawapan AI","speech":"2 ayat dalam ${visitorData.langName} untuk ${visitorData.ageGroup}","funFact":"Fakta tambahan"}`);
   }
 
   async function fetchGeminiVisualResponse(promptText) {
@@ -629,48 +498,23 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
       });
-
       const data = await response.json();
-      let rawText = data.candidates[0].content.parts[0].text;
-      
-      rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+      let rawText = data.candidates[0].content.parts[0].text.replace(/```json/g, "").replace(/```/g, "").trim();
       const aiData = JSON.parse(rawText);
-
-      const htmlVisual = `
-        <div class="ai-card">
-          <div class="ai-title">${aiData.title}</div>
-          <div>${aiData.speech}</div>
-          <div class="ai-fact">💡 <b>Fakta Bonus:</b> ${aiData.funFact}</div>
-        </div>
-      `;
-
-      updateDialogHTML(htmlVisual);
+      updateDialog(`<b>${aiData.title}</b><br>${aiData.speech}<br>💡 <i>${aiData.funFact}</i>`);
       document.getElementById('statusBadge').innerText = "ROBOT SPEAKING";
       speakText(aiData.speech);
-
     } catch (err) {
-      console.error(err);
       updateDialog("Ralat pemprosesan AI. Semak API Key anda.");
-      document.getElementById('statusBadge').innerText = "VISITOR DETECTED";
     }
   }
 
-  function updateDialog(text) { document.getElementById('dialogBox').innerText = text; }
-  function updateDialogHTML(html) { document.getElementById('dialogBox').innerHTML = html; }
+  function updateDialog(text) { document.getElementById('dialogBox').innerHTML = text; }
 
   function speakText(text) {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = visitorData.langCode;
-    
-    if (visitorData.ageGroup === "Kanak-kanak") {
-      utterance.rate = 1.0; utterance.pitch = 1.2;
-    } else if (visitorData.ageGroup === "Warga Emas") {
-      utterance.rate = 0.85; utterance.pitch = 0.9;
-    } else {
-      utterance.rate = 0.95; utterance.pitch = 1.0;
-    }
-
     utterance.onend = () => { document.getElementById('statusBadge').innerText = "VISITOR DETECTED"; };
     window.speechSynthesis.speak(utterance);
   }
