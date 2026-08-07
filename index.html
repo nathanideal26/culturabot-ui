@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CulturaBot Giant iPad v9.0</title>
+  <title>CulturaBot Interactive Visual v10.0</title>
   <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
 
   <style>
@@ -33,7 +33,6 @@
       overflow: hidden;
     }
 
-    /* HEADER NAVIGASI */
     .header {
       width: 100%;
       display: flex;
@@ -80,7 +79,6 @@
       cursor: pointer;
     }
 
-    /* WIDGET ROBOT GERGASI IPAD */
     .robot-body-wrapper {
       display: flex;
       flex-direction: column;
@@ -92,8 +90,8 @@
     }
 
     .robot-head-svg {
-      width: 320px !important;
-      height: 180px !important;
+      width: 300px !important;
+      height: 160px !important;
       filter: drop-shadow(0 0 25px rgba(6, 182, 212, 0.7));
       margin-bottom: -15px;
       z-index: 2;
@@ -103,7 +101,7 @@
       position: relative;
       width: 90% !important;
       max-width: 650px !important;
-      height: 320px !important;
+      height: 280px !important;
       background: #000;
       border: 4px solid var(--accent-cyan) !important;
       border-radius: 28px;
@@ -114,17 +112,8 @@
       align-items: center;
     }
 
-    #webcam {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    #overlayCanvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-    }
+    #webcam { width: 100%; height: 100%; object-fit: cover; }
+    #overlayCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
     .chest-standby-screen {
       position: absolute;
@@ -151,23 +140,45 @@
       margin-top: 8px;
     }
 
-    /* DIALOG BOX OUTPUT JAWAPAN */
-    .dialog-box {
+    /* KAD VISUAL HASIL CARIAN BARU (BIG DISPLAY CARD) */
+    .result-card-container {
       width: 100%;
-      min-height: 100px;
-      max-height: 150px;
-      background: var(--card-bg);
-      border: 2px solid #374151;
-      border-radius: 18px;
+      min-height: 130px;
+      background: #1e293b;
+      border: 3px solid var(--accent-cyan);
+      border-radius: 20px;
       padding: 16px;
-      font-size: 19px !important;
-      line-height: 1.5;
-      text-align: left;
-      overflow-y: auto;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    /* PANEL MENU KAWALAN IPAD TOUCH */
+    .result-title {
+      font-size: 22px !important;
+      font-weight: 800;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-body {
+      font-size: 19px !important;
+      line-height: 1.5;
+      color: #f1f5f9;
+    }
+
+    .result-fact {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #94a3b8;
+      font-style: italic;
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+    }
+
     .panel-container {
       width: 100%;
       background: var(--card-bg);
@@ -302,7 +313,7 @@
       <button class="btn-nav-home" onclick="resetToHome()">🏠 HOME</button>
       <button class="btn-nav-reset" onclick="returnRobotToBase()">🤖 RESET ROBOT</button>
     </div>
-    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v9.0</span>
+    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v10.0</span>
     <div>
       <span id="userInfo" style="font-size: 13px; color: #9ca3af; margin-right: 8px;">Belum Didaftar</span>
       <button class="btn-key" onclick="showKeyModal()">Key</button>
@@ -311,22 +322,16 @@
 
   <!-- ROBOT GERGASI UTAMA -->
   <div class="robot-body-wrapper">
-    <!-- KEPALA ROBOT GERGASI -->
     <svg class="robot-head-svg" viewBox="0 0 200 130" fill="none">
       <rect x="15" y="10" width="170" height="110" rx="28" fill="#111827" stroke="#374151" stroke-width="6"/>
       <path d="M50 6 L150 6" stroke="#06b6d4" stroke-width="5" stroke-linecap="round"/>
       <circle cx="100" cy="4" r="6" fill="#06b6d4"/>
       <rect x="30" y="25" width="140" height="80" rx="16" fill="#030712" stroke="#1f2937" stroke-width="3"/>
-      
-      <!-- Mata Robot -->
       <circle id="eyeLeft" cx="68" cy="58" r="15" fill="#06b6d4"/>
       <circle id="eyeRight" cx="132" cy="58" r="15" fill="#06b6d4"/>
-      
-      <!-- Mulut Robot -->
       <path id="mouthLine" d="M 68 82 Q 100 108 132 82" stroke="#06b6d4" stroke-width="5" stroke-linecap="round" fill="none"/>
     </svg>
 
-    <!-- DADA SCANNER GERGASI -->
     <div class="robot-chest-scanner">
       <video id="webcam" autoplay playsinline muted></video>
       <canvas id="overlayCanvas"></canvas>
@@ -340,9 +345,11 @@
     <div class="status-badge" id="statusBadge">STANDBY MODE</div>
   </div>
 
-  <!-- DIALOG BOX OUTPUT JAWAPAN AI -->
-  <div class="dialog-box" id="dialogBox">
-    Tekan <b>📷 Aktifkan Kamera AI</b> di bawah untuk memulakan pemanduan galeri.
+  <!-- PAPARAN KAD HASIL CARIAN VISUAL BARU -->
+  <div class="result-card-container" id="displayCard">
+    <div class="result-title" id="cardTitle">🤖 Selamat Datang ke CulturaBot!</div>
+    <div class="result-body" id="cardBody">Sila tekan <b>📷 Aktifkan Kamera AI</b> di bawah untuk memulakan pemanduan galeri muzium.</div>
+    <div class="result-fact" id="cardFact">💡 Panduan Pemandu Warisan Melaka</div>
   </div>
 
   <!-- PANEL MENU KAWALAN -->
@@ -381,30 +388,42 @@
 
       <div class="chat-input-group">
         <button id="micBtn" class="btn-mic" onclick="startVoiceInput()">🎙️</button>
-        <input type="text" id="textInput" class="input-text" placeholder="Taip soalan di sini...">
+        <input type="text" id="textInput" class="input-text" placeholder="Taip soalan anda di sini...">
         <button class="btn-send" onclick="sendTextQuery()">Hantar</button>
       </div>
     </div>
   </div>
 
 <script>
-  let GEMINI_API_KEY = localStorage.getItem("GEMINI_KEY") || "";
+  let GEMINI_API_KEY = localStorage.getItem("AQ.Ab8RN6LXnY0G0KnmbQLLPIieckuQ27WvcXfo4DRpaJtclFmuew") || "";
   let isVisitorDetected = false;
   let recognition = null;
-  let isSpeechSynthesisUnlocked = false;
   
   let visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
 
-  /* UNLOCK SPEECH SYNTHESIS UNTUK IPAD AUTOPLAY POLICY */
-  function unlockAudioOniPad() {
-    if (!isSpeechSynthesisUnlocked) {
-      window.speechSynthesis.cancel();
-      const dummyUtterance = new SpeechSynthesisUtterance("");
-      dummyUtterance.volume = 0;
-      window.speechSynthesis.speak(dummyUtterance);
-      isSpeechSynthesisUnlocked = true;
+  // PANGKALAN DATA WARISAN LOKAL (OFFLINE FALLBACK)
+  const localKnowledge = {
+    "A Famosa": {
+      title: "🏰 A Famosa (Kota Porta de Santiago)",
+      body: "A Famosa dibina oleh Portugis pada tahun 1511 selepas menakluki Melaka. Ia merupakan antara seni bina Eropah tertua yang masih tinggal di Asia.",
+      fact: "💡 Fakta: Pintu gerbang Kota Porta de Santiago ini diselamatkan daripada dimusnahkan oleh Sir Stamford Raffles pada tahun 1810."
+    },
+    "Muzium Samudera": {
+      title: "⛵ Muzium Samudera (Flora de la Mar)",
+      body: "Muzium ini merupakan replika kapal Portugis Flora de la Mar yang tenggelam di perairan Melaka bersama khazanah harta karun.",
+      fact: "💡 Fakta: Kapal asal membawa barang rampasan bernilai jutaan ringgit sebelum karam akibat ribut."
+    },
+    "Stadthuys": {
+      title: "🏛️ Bangunan Stadthuys",
+      body: "Stadthuys dibina oleh Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi. Ia terkenal dengan warna merah terakota yang ikonik.",
+      fact: "💡 Fakta: Ini merupakan bangunan pentadbiran Belanda tertua yang masih wujud di rantau Asia Tenggara."
+    },
+    "Kampung Morten": {
+      title: "🏡 Kampung Morten",
+      body: "Kampung Morten ialah perkampungan tradisional Melayu di tengah bandar raya Melaka yang kaya dengan seni bina rumah panggung.",
+      fact: "💡 Fakta: Diberi nama sempena J.F. Morten, seorang pegawai British pada zaman penjajahan."
     }
-  }
+  };
 
   function checkApiKey() {
     if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") {
@@ -417,18 +436,16 @@
   function showKeyModal() { document.getElementById('keyModal').classList.remove('hidden'); }
 
   function saveApiKey() {
-    unlockAudioOniPad();
     const val = document.getElementById('apiKeyInput').value.trim();
     if (val !== "") {
       GEMINI_API_KEY = val;
       localStorage.setItem("GEMINI_KEY", val);
       document.getElementById('keyModal').classList.add('hidden');
-      updateDialog("API Key disimpan!");
+      renderCard("🔑 API Key Disimpan", "Gemini API Key anda telah berjaya disimpan. Sila mula buat carian!", "💡 AI sedia berkhidmat.");
     } else { alert("Masukkan API Key yang sah."); }
   }
 
   function resetToHome() {
-    unlockAudioOniPad();
     isVisitorDetected = false;
     visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
     document.getElementById('chestStandby').classList.remove('hidden');
@@ -438,32 +455,30 @@
     document.getElementById('stepStart').classList.remove('hidden');
     document.getElementById('userInfo').innerText = "Belum Didaftar";
     setRobotFace("SLEEP");
-    updateDialog("Antara muka telah kembali ke Menu Utama. Tekan 'Aktifkan Kamera AI' untuk bermula.");
+    renderCard("🏠 Menu Utama", "Antara muka telah kembali ke Menu Utama. Tekan 'Aktifkan Kamera AI' untuk bermula.", "💡 Panduan CulturaBot");
     window.speechSynthesis.cancel();
   }
 
   function returnRobotToBase() {
-    unlockAudioOniPad();
     window.speechSynthesis.cancel();
-    updateDialog("<b>[ARAHAN BLE DIHANTAR]</b><br>Robot SPIKE Prime bergerak ke garisan permulaan...");
+    renderCard("🤖 Reset Robot", "Isyarat Bluetooth dihantar! Robot SPIKE Prime sedang bergerak kembali ke garisan permulaan.", "💡 Isyarat BLE Aktif");
     speakText("Robot sedang bergerak kembali ke kedudukan asal.");
   }
 
   async function startCamera() {
-    unlockAudioOniPad();
     checkApiKey();
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('overlayCanvas');
     
     try {
-      updateDialog("Meminta kebenaran kamera...");
+      renderCard("📷 Memulakan Kamera", "Meminta kebenaran kamera iPad...", "💡 Sila tekan Allow");
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
       video.srcObject = stream;
 
       document.getElementById('chestStandby').classList.add('hidden');
       document.getElementById('stepStart').classList.add('hidden');
       setRobotFace("SEARCH");
-      updateDialog("Kamera AI Aktif! Pengimbas muka sedang mengesan pelawat...");
+      renderCard("🔍 Pengimbas AI Aktif", "Sedang mengesan pelawat di hadapan skrin iPad...", "💡 Sila berdiri di hadapan kamera");
 
       await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/');
       const displaySize = { width: canvas.offsetWidth, height: canvas.offsetHeight };
@@ -493,52 +508,57 @@
       }, 500);
 
     } catch (err) {
-      updateDialog("Benarkan akses kamera di Safari iPad (Settings > Safari > Camera > Allow).");
+      renderCard("⚠️ Ralat Kamera", "Sila benarkan akses kamera di Safari iPad (Settings > Safari > Camera > Allow).", "💡 Kebenaran Diperlukan");
     }
   }
 
   function onVisitorAutoDetected() {
     setRobotFace("HAPPY");
     document.getElementById('stepLang').classList.remove('hidden');
-    updateDialog("<b>PELAWAT DIKESAN!</b> Sila pilih bahasa pilihan anda pada skrin.");
+    renderCard("👋 Pelawat Dikesan!", "Selamat datang ke Galeri Warisan! Sila pilih bahasa pilihan anda pada skrin di bawah.", "💡 Langkah 1 daripada 3");
     speakText("Hello! Selamat datang. Sila pilih bahasa pada skrin.");
   }
 
   function setLanguage(code, name) {
-    unlockAudioOniPad();
     visitorData.langCode = code; visitorData.langName = name;
     document.getElementById('stepLang').classList.add('hidden');
     document.getElementById('stepAge').classList.remove('hidden');
-    updateDialog("Sila pilih kategori umur anda.");
+    renderCard(`🌐 Bahasa: ${name}`, "Sila pilih kategori umur anda di bawah supaya penjelasan disesuaikan.", "💡 Langkah 2 daripada 3");
     speakText("Sila pilih kategori umur anda.");
   }
 
   function setAgeCategory(age) {
-    unlockAudioOniPad();
     visitorData.ageGroup = age;
     document.getElementById('stepAge').classList.add('hidden');
     document.getElementById('stepMainUI').classList.remove('hidden');
     document.getElementById('userInfo').innerText = `${visitorData.langName} | ${visitorData.ageGroup}`;
-    updateDialog("Profil ditetapkan! Pilih destinasi atau taip soalan di bawah.");
-    speakText("Profil ditetapkan.");
+    renderCard("✅ Profil Ditetapkan!", "Sila pilih mana-mana destinasi sejarah di bawah, ATAU taip soalan anda di dalam kotak carian.", "💡 Langkah 3: Mula Carian");
+    speakText("Profil ditetapkan. Sila pilih destinasi.");
   }
 
   function selectDestination(place) {
-    unlockAudioOniPad();
     visitorData.destination = place;
     setRobotFace("THINK");
-    updateDialog(`CulturaBot sedang menganalisis maklumat ${place}...`);
-    fetchGeminiResponse(`Terangkan secara ringkas 2 ayat mengenai ${place} di Melaka dalam bahasa ${visitorData.langName} untuk kategori umur ${visitorData.ageGroup}.`);
+    renderCard(`🔍 Menganalisis ${place}...`, "CulturaBot sedang menyediakan maklumat visual untuk anda...", "💡 AI Processing");
+
+    // Guna Offline Fallback Dulu Jika Ada
+    if (localKnowledge[place]) {
+      const data = localKnowledge[place];
+      renderCard(data.title, data.body, data.fact);
+      setRobotFace("SPEAK");
+      speakText(data.body);
+    }
+
+    // Panggil Online AI Gemini
+    fetchGeminiResponse(`Terangkan secara ringkas 2 ayat mengenai ${place} di Melaka dalam bahasa ${visitorData.langName} untuk umur ${visitorData.ageGroup}.`, place);
   }
 
-  /* PENGECAMAN SUARA SAFARI IPAD */
   function startVoiceInput() {
-    unlockAudioOniPad();
     const micBtn = document.getElementById('micBtn');
     const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechClass) {
-      alert("Pengecaman suara memerlukan iOS/iPadOS Safari.");
+      alert("Pengecaman suara memerlukan iPadOS Safari.");
       return;
     }
 
@@ -551,19 +571,18 @@
 
     micBtn.classList.add('listening');
     setRobotFace("THINK");
-    updateDialog("🎙️ <b>Mendengar...</b> Sila bercakap sekarang di hadapan iPad.");
+    renderCard("🎙️ Mendengar Suara...", "Sila bercakap di hadapan skrin iPad sekarang.", "💡 Pengecaman Suara Aktif");
 
     recognition.onresult = (event) => {
       micBtn.classList.remove('listening');
       const speechText = event.results[0][0].transcript;
-      updateDialog(`Soalan Suara: "${speechText}"`);
+      renderCard("💬 Soalan Suara", `"${speechText}"`, "💡 Mengolah Jawapan AI...");
       processAIQuery(speechText);
     };
 
-    recognition.onerror = (event) => {
+    recognition.onerror = () => {
       micBtn.classList.remove('listening');
-      console.error("Speech Error:", event.error);
-      updateDialog("Suara tidak dikesan. Sila tekan ikon 🎙️ sekali lagi atau taip soalan di bawah.");
+      renderCard("⚠️ Suara Tidak Dikesan", "Sila tekan ikon 🎙️ sekali lagi dan bercakap terus, atau taip soalan di bawah.", "💡 Cuba Lagi");
       setRobotFace("HAPPY");
     };
 
@@ -573,71 +592,53 @@
   }
 
   function sendTextQuery() {
-    unlockAudioOniPad();
     const inputField = document.getElementById('textInput');
     const text = inputField.value.trim();
     if (!text) return;
     
-    updateDialog(`Soalan Taip: "${text}"`);
     inputField.value = "";
+    renderCard(`🔎 Soalan Carian`, `"${text}"`, "💡 Menganalisis dengan Gemini AI...");
     processAIQuery(text);
   }
 
   function processAIQuery(queryText) {
     setRobotFace("THINK");
-    updateDialog(`Menganalisis soalan: "${queryText}"...`);
-    fetchGeminiResponse(`Jawab soalan pelawat muzium ini: "${queryText}". Jawab secara lisan dalam 2 ayat sahaja menggunakan bahasa ${visitorData.langName} untuk umur ${visitorData.ageGroup}.`);
+    fetchGeminiResponse(`Jawab soalan pelawat muzium ini: "${queryText}". Jawab secara lisan dalam 2 ayat sahaja menggunakan bahasa ${visitorData.langName} untuk umur ${visitorData.ageGroup}.`, `Hasil Carian: ${queryText}`);
   }
 
-  /* GEMINI API CALL REFACTORED (DIRECT TEXT RESPON) */
-  async function fetchGeminiResponse(promptText) {
+  async function fetchGeminiResponse(promptText, customTitle) {
     if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") {
-      showKeyModal();
-      return;
+      return; // Kekalkan paparan offline
     }
 
-    const payload = {
-      contents: [{
-        parts: [{ text: promptText }]
-      }]
-    };
+    const payload = { contents: [{ parts: [{ text: promptText }] }] };
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-    const endpoints = [
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`
-    ];
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-    let success = false;
-
-    for (let url of endpoints) {
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.candidates && data.candidates[0].content.parts[0].text) {
-            const replyText = data.candidates[0].content.parts[0].text;
-            
-            updateDialog(`<b>CulturaBot Guide:</b><br>${replyText}`);
-            setRobotFace("SPEAK");
-            speakText(replyText);
-            success = true;
-            break;
-          }
+      if (response.ok) {
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          const replyText = data.candidates[0].content.parts[0].text;
+          renderCard(`✨ ${customTitle || 'Hasil Carian AI'}`, replyText, "💡 Maklumat Dihasilkan Oleh Gemini AI");
+          setRobotFace("SPEAK");
+          speakText(replyText);
         }
-      } catch (err) {
-        console.error("API Fetch Error:", err);
       }
+    } catch (err) {
+      console.error("API Error:", err);
     }
+  }
 
-    if (!success) {
-      updateDialog("Ralat pemprosesan AI. Sila tekan butang 'Key' di atas kanan dan pastikan Gemini API Key anda sah.");
-      setRobotFace("HAPPY");
-    }
+  function renderCard(title, body, fact) {
+    document.getElementById('cardTitle').innerText = title;
+    document.getElementById('cardBody').innerHTML = body;
+    document.getElementById('cardFact').innerText = fact || "💡 CulturaBot Guide";
   }
 
   function setRobotFace(state) {
@@ -669,15 +670,10 @@
     }
   }
 
-  function updateDialog(text) { document.getElementById('dialogBox').innerHTML = text; }
-
-  /* AUDIOLISAN SPEECH SYNTHESIS FIX */
   function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     
     window.speechSynthesis.cancel();
-    
-    // Bersihkan HTML tag jika ada sebelum pembacaan lisan
     const cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
     
     const utterance = new SpeechSynthesisUtterance(cleanText);
@@ -686,17 +682,8 @@
     utterance.rate = visitorData.ageGroup === "Warga Emas" ? 0.85 : 0.95;
 
     utterance.onend = () => { setRobotFace("HAPPY"); };
-    utterance.onerror = (e) => {
-      console.error("SpeechSynthesis error:", e);
-      setRobotFace("HAPPY");
-    };
-
     window.speechSynthesis.speak(utterance);
   }
-
-  // Tambah event listener untuk unlock audio pada sentuhan pertama
-  document.addEventListener('touchstart', unlockAudioOniPad, { once: true });
-  document.addEventListener('click', unlockAudioOniPad, { once: true });
 
   window.onload = checkApiKey;
 </script>
