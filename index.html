@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CulturaBot Giant Interactive v16.0</title>
+  <title>CulturaBot Language Sync v18.0</title>
   <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
 
   <style>
@@ -33,7 +33,7 @@
       overflow: hidden;
     }
 
-    /* HEADER */
+    /* HEADER NAVIGASI */
     .header {
       width: 100%;
       display: flex;
@@ -80,7 +80,6 @@
       cursor: pointer;
     }
 
-    /* ROBOT & BINGKAI KAMERA GERGASI */
     .robot-body-wrapper {
       display: flex;
       flex-direction: column;
@@ -99,12 +98,11 @@
       z-index: 2;
     }
 
-    /* BINGKAI KAMERA DIPERBESARKAN DRASTIK */
     .robot-chest-scanner {
       position: relative;
       width: 95% !important;
       max-width: 700px !important;
-      height: 360px !important; /* SKRIN GERGASI IPAD */
+      height: 360px !important;
       background: #000;
       border: 4px solid var(--accent-cyan) !important;
       border-radius: 28px;
@@ -140,7 +138,7 @@
       margin-top: 6px;
     }
 
-    /* MODAL LAMAN WEB SEBENAR WITH VOICE SELECTION BAR */
+    /* BROWSER POPUP MODAL */
     .real-web-modal {
       position: fixed;
       top: 0; left: 0;
@@ -191,7 +189,6 @@
     }
 
     .btn-voice-opt {
-      background: #0284c7;
       color: white;
       border: none;
       padding: 10px 16px;
@@ -276,7 +273,7 @@
       color: white;
       padding: 14px;
       border-radius: 14px;
-      font-size: 18px !important;
+      font-size: 17px !important;
     }
 
     .btn-mic {
@@ -306,7 +303,7 @@
       color: white;
       padding: 14px 24px !important;
       border-radius: 14px;
-      font-size: 18px !important;
+      font-size: 17px !important;
       font-weight: bold;
       cursor: pointer;
     }
@@ -347,15 +344,15 @@
     </div>
   </div>
 
-  <!-- BROWSER LAMAN WEB SEBENAR WITH CHOICE MODES -->
+  <!-- POPUP BROWSER LAMAN WEB -->
   <div id="realWebModal" class="real-web-modal hidden">
     <div class="real-web-container">
       <div class="web-bar">
         <div class="url-display" id="urlDisplay">https://ms.wikipedia.org/wiki/Kota_A_Famosa</div>
         <div style="display: flex; gap: 8px;">
-          <button class="btn-voice-opt" style="background:#10b981;" onclick="readFullContent()">🔊 Baca Untuk Saya</button>
-          <button class="btn-voice-opt" style="background:#374151;" onclick="readSelfMode()">📖 Saya Baca Sendiri</button>
-          <button class="btn-close-web" onclick="closeRealWebModal()">❌ Tutup Web</button>
+          <button class="btn-voice-opt" id="btnReadForMe" style="background:#10b981;" onclick="readFullContent()">🔊 Baca Untuk Saya</button>
+          <button class="btn-voice-opt" id="btnReadSelf" style="background:#374151;" onclick="readSelfMode()">📖 Saya Baca Sendiri</button>
+          <button class="btn-close-web" id="btnCloseWeb" onclick="closeRealWebModal()">❌ Tutup Web</button>
         </div>
       </div>
       <iframe id="webIframe" class="web-frame" src=""></iframe>
@@ -365,17 +362,17 @@
   <!-- HEADER NAVIGASI -->
   <div class="header">
     <div class="nav-group">
-      <button class="btn-nav-home" onclick="resetToHome()">🏠 HOME</button>
-      <button class="btn-nav-reset" onclick="returnRobotToBase()">🤖 RESET ROBOT</button>
+      <button class="btn-nav-home" id="btnHome" onclick="resetToHome()">🏠 HOME</button>
+      <button class="btn-nav-reset" id="btnResetRobot" onclick="returnRobotToBase()">🤖 RESET ROBOT</button>
     </div>
-    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v16.0</span>
+    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v18.0</span>
     <div>
       <span id="userInfo" style="font-size: 13px; color: #9ca3af; margin-right: 8px;">Belum Didaftar</span>
       <button class="btn-key" onclick="showKeyModal()">Key</button>
     </div>
   </div>
 
-  <!-- ROBOT GERGASI UTAMA -->
+  <!-- ROBOT UTAMA -->
   <div class="robot-body-wrapper">
     <svg class="robot-head-svg" viewBox="0 0 200 130" fill="none">
       <rect x="15" y="10" width="170" height="110" rx="28" fill="#111827" stroke="#374151" stroke-width="6"/>
@@ -392,10 +389,9 @@
       <video id="webcam" autoplay playsinline muted></video>
       <canvas id="overlayCanvas"></canvas>
 
-      <!-- UNLOCK TOUCH OVERLAY FOR SAFARI AUDIO -->
       <div id="unlockOverlay" class="unlock-overlay">
         <button class="btn-option" style="background:#0284c7 !important; padding:22px 30px !important; font-size:22px !important;" onclick="unlockSystemAndStart()">
-          👆 SENTUH SKRIN UNTUK MULA<br><span style="font-size:14px; font-weight:normal;">(Tap Screen to Activate AI Voice)</span>
+          👆 SENTUH SKRIN UNTUK MULA<br><span style="font-size:14px; font-weight:normal;">(Tap Screen to Activate CulturaBot)</span>
         </button>
       </div>
     </div>
@@ -406,7 +402,7 @@
   <!-- PANEL MENU KAWALAN -->
   <div class="panel-container">
     <div id="stepLang" class="hidden">
-      <div class="step-title">LANGKAH 1: Sila Pilih Bahasa / Select Language / 请选择语言</div>
+      <div class="step-title" id="txtStep1">LANGKAH 1: Sila Pilih Bahasa / Select Language / 请选择语言</div>
       <div class="grid-options">
         <button class="btn-option" onclick="setLanguage('ms-MY', 'Bahasa Melayu')">🇲🇾 Bahasa Melayu</button>
         <button class="btn-option" onclick="setLanguage('en-US', 'English')">🇬🇧 English</button>
@@ -416,27 +412,27 @@
     </div>
 
     <div id="stepAge" class="hidden">
-      <div class="step-title">LANGKAH 2: Sila Pilih Kategori Umur</div>
+      <div class="step-title" id="txtStep2">LANGKAH 2: Sila Pilih Kategori Umur</div>
       <div class="grid-options">
-        <button class="btn-option" onclick="setAgeCategory('Kanak-kanak')">🧒 Kanak-kanak</button>
-        <button class="btn-option" onclick="setAgeCategory('Dewasa')">🧑 Dewasa</button>
-        <button class="btn-option" onclick="setAgeCategory('Warga Emas')" style="grid-column: span 2;">🧓 Warga Emas</button>
+        <button class="btn-option" id="btnChild" onclick="setAgeCategory('Kanak-kanak')">🧒 Kanak-kanak</button>
+        <button class="btn-option" id="btnAdult" onclick="setAgeCategory('Dewasa')">🧑 Dewasa</button>
+        <button class="btn-option" id="btnSenior" onclick="setAgeCategory('Warga Emas')" style="grid-column: span 2;">🧓 Warga Emas</button>
       </div>
     </div>
 
     <div id="stepMainUI" class="hidden">
-      <div class="step-title">LANGKAH 3: Pilih Destinasi ATAU Tanya Soalan AI</div>
+      <div class="step-title" id="txtStep3">LANGKAH 3: Pilih Destinasi ATAU Tanya Soalan AI</div>
       <div class="grid-options">
-        <button class="btn-option" onclick="selectDestination('A Famosa')">🏰 A Famosa</button>
-        <button class="btn-option" onclick="selectDestination('Muzium Samudera')">⛵ Muzium Samudera</button>
-        <button class="btn-option" onclick="selectDestination('Stadthuys')">🏛️ Stadthuys</button>
-        <button class="btn-option" onclick="selectDestination('Kampung Morten')">🏡 Kg. Morten</button>
+        <button class="btn-option" id="btnDest1" onclick="selectDestination('A Famosa')">🏰 A Famosa</button>
+        <button class="btn-option" id="btnDest2" onclick="selectDestination('Muzium Samudera')">⛵ Muzium Samudera</button>
+        <button class="btn-option" id="btnDest3" onclick="selectDestination('Stadthuys')">🏛️ Stadthuys</button>
+        <button class="btn-option" id="btnDest4" onclick="selectDestination('Kampung Morten')">🏡 Kg. Morten</button>
       </div>
 
       <div class="chat-input-group">
         <button id="micBtn" class="btn-mic" onclick="startVoiceInput()">🎙️</button>
         <input type="text" id="textInput" class="input-text" placeholder="Taip soalan di sini..." onkeydown="if(event.key==='Enter') sendTextQuery()">
-        <button class="btn-send" onclick="sendTextQuery()">Hantar</button>
+        <button class="btn-send" id="btnSend" onclick="sendTextQuery()">Hantar</button>
       </div>
     </div>
   </div>
@@ -449,30 +445,196 @@
   
   let visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
 
-  const realWebsites = {
-    "A Famosa": {
-      url: "https://ms.wikipedia.org/wiki/Kota_A_Famosa",
-      speech: "Kota A Famosa dibina oleh pihak Portugis pada tahun 1511 di bawah pimpinan Alfonso de Albuquerque selepas menakluki Kesultanan Melayu Melaka. Kota ini merupakan kubu pertahanan Eropah tertua yang masih wujud di rantau Asia Tenggara. Pintu gerbang Kota Porta de Santiago ini telah diselamatkan oleh Sir Stamford Raffles pada tahun 1810 daripada dimusnahkan oleh pihak British."
+  // KAMUS TERJEMAHAN DYNAMIC MULTI-LANGUAGE
+  const translations = {
+    "ms-MY": {
+      step2Title: "LANGKAH 2: Sila Pilih Kategori Umur",
+      btnChild: "🧒 Kanak-kanak", btnAdult: "🧑 Dewasa", btnSenior: "🧓 Warga Emas",
+      step3Title: "LANGKAH 3: Pilih Destinasi ATAU Tanya Soalan AI",
+      dest1: "🏰 A Famosa", dest2: "⛵ Muzium Samudera", dest3: "🏛️ Stadthuys", dest4: "🏡 Kg. Morten",
+      placeholder: "Taip soalan anda di sini...", btnSend: "Hantar",
+      readForMe: "🔊 Baca Untuk Saya", readSelf: "📖 Saya Baca Sendiri", closeWeb: "❌ Tutup Web",
+      welcomeMsg: "Hello! Selamat datang ke CulturaBot Melaka. Sila pilih bahasa pilihan anda pada skrin.",
+      selectAgeMsg: "Sila pilih kategori umur anda.",
+      profileSetMsg: "Profil ditetapkan. Sila pilih destinasi atau taip soalan anda.",
+      webOpenMsg: "Laman web dibuka. Tekan 'Baca Untuk Saya' untuk mendengar penerangan, atau baca sendiri."
     },
-    "Muzium Samudera": {
-      url: "https://ms.wikipedia.org/wiki/Muzium_Samudera",
-      speech: "Muzium Samudera ialah sebuah replika kapal perang Portugis terkenal iaitu Flora de la Mar. Kapal asal tersebut telah karam di perairan Melaka pada tahun 1511 semasa dalam perjalanan membawa khazanah harta karun ke Portugal. Muzium ini menempatkan pelbagai model pameran perdagangan pelabuhan dan warisan maritim Melaka."
+    "en-US": {
+      step2Title: "STEP 2: Please Select Age Category",
+      btnChild: "🧒 Children", btnAdult: "🧑 Adult", btnSenior: "🧓 Senior Citizen",
+      step3Title: "STEP 3: Select Destination OR Ask AI Question",
+      dest1: "🏰 A Famosa", dest2: "⛵ Maritime Museum", dest3: "🏛️ Stadthuys", dest4: "🏡 Morten Village",
+      placeholder: "Type your question here...", btnSend: "Send",
+      readForMe: "🔊 Read For Me", readSelf: "📖 Read Myself", closeWeb: "❌ Close Web",
+      welcomeMsg: "Hello! Welcome to CulturaBot Melaka. Please select your preferred language on the screen.",
+      selectAgeMsg: "Please select your age category.",
+      profileSetMsg: "Profile set. Please select a destination or type your question.",
+      webOpenMsg: "Website opened. Tap 'Read For Me' to listen to the full description, or read by yourself."
     },
-    "Stadthuys": {
-      url: "https://ms.wikipedia.org/wiki/Stadthuys",
-      speech: "Stadthuys dibina oleh penjajah Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi gabenor Belanda. Ia terkenal dengan warna merah terakota ikonik di kawasan Bangunan Merah. Stadthuys merupakan bangunan pentadbiran Belanda tertua yang masih berdiri kukuh di rantau Asia Tenggara."
+    "zh-CN": {
+      step2Title: "步骤 2：请选择年龄组",
+      btnChild: "🧒 儿童", btnAdult: "🧑 成人", btnSenior: "🧓 乐龄人士",
+      step3Title: "步骤 3：选择目的地或询问 AI",
+      dest1: "🏰 法摩沙堡", dest2: "⛵ 海事博物馆", dest3: "🏛️ 荷兰红屋", dest4: "🏡 摩登甘榜",
+      placeholder: "在此输入您的问题...", btnSend: "发送",
+      readForMe: "🔊 为我朗读", readSelf: "📖 我自己阅读", closeWeb: "❌ 关闭网页",
+      welcomeMsg: "您好！欢迎来到马六甲 CulturaBot。请在下方屏幕选择您的语言。",
+      selectAgeMsg: "请选择您的年龄组。",
+      profileSetMsg: "个人资料已设置。请选择目的地或输入问题。",
+      webOpenMsg: "网页已打开。您可以点击‘为我朗读’收听说明，或自行阅读。"
     },
-    "Kampung Morten": {
-      url: "https://ms.wikipedia.org/wiki/Kampung_Morten",
-      speech: "Kampung Morten ialah perkampungan tradisional Melayu yang digazetkan sebagai muzium hidup di tebing Sungai Melaka. Perkampungan ini memaparkan keindahan seni bina rumah panggung klasik Melayu Melaka, dan dinamakan sempena pegawai British J.F. Morten."
-    },
-    "Portugis": {
-      url: "https://ms.wikipedia.org/wiki/Pencerobohan_Portugis_ke_atas_Melaka",
-      speech: "Portugis menyerang dan menguasai Melaka pada tahun 1511 di bawah pimpinan Alfonso de Albuquerque bagi mengawal laluan perdagangan rempah di Selat Melaka. Penjajahan Portugis berlarutan selama 130 tahun sehingga dikalahkan oleh pihak Belanda pada tahun 1641."
+    "ta-IN": {
+      step2Title: "படி 2: தயவுசெய்து உங்கள் வயது வகையைத் தேர்ந்தெடுக்கவும்",
+      btnChild: "🧒 குழந்தைகள்", btnAdult: "🧑 பெரியவர்கள்", btnSenior: "🧓 முதியவர்கள்",
+      step3Title: "படி 3: இலக்கைத் தேர்ந்தெடுக்கவும் அல்லது AI கேள்வியைக் கேட்கவும்",
+      dest1: "🏰 ஏ பாமோசா", dest2: "⛵ கடற்படை அருங்காட்சியகம்", dest3: "🏛️ ஸ்டாட்ஹுய்ஸ்", dest4: "🏡 கம்போங் மோர்டன்",
+      placeholder: "உங்கள் கேள்வியை இங்கே தட்டச்சு செய்யவும்...", btnSend: "அனுப்பு",
+      readForMe: "🔊 எனக்காகப் படியுங்கள்", readSelf: "📖 நானே படிக்கிறேன்", closeWeb: "❌ மூடவும்",
+      welcomeMsg: "வணக்கம்! சுல்தராபாட் மலாக்காவிற்கு வரவேற்கிறோம். திரையில் உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
+      selectAgeMsg: "தயவுசெய்து உங்கள் வயது வகையைத் தேர்ந்தெடுக்கவும்.",
+      profileSetMsg: "சுயவிவரம் அமைக்கப்பட்டது. இலக்கைத் தேர்ந்தெடுக்கவும் அல்லது கேள்வியைத் தட்டச்சு செய்யவும்.",
+      webOpenMsg: "இணையதளம் திறக்கப்பட்டது. விளக்கத்தைக் கேட்க 'எனக்காகப் படியுங்கள்' என்பதைத் தட்டவும்."
     }
   };
 
-  /* UNLOCK AUDIO DENGAN SENTUHAN PERTAMA IPAD */
+  // MULTI-LANGUAGE WEBSITES & SPEECH CONTENT
+  const realWebsites = {
+    "ms-MY": {
+      "A Famosa": {
+        url: "https://ms.wikipedia.org/wiki/Kota_A_Famosa",
+        speech: "Kota A Famosa dibina oleh pihak Portugis pada tahun 1511 di bawah pimpinan Alfonso de Albuquerque selepas menakluki Kesultanan Melayu Melaka. Kota ini merupakan kubu pertahanan Eropah tertua yang masih wujud di rantau Asia Tenggara."
+      },
+      "Muzium Samudera": {
+        url: "https://ms.wikipedia.org/wiki/Muzium_Samudera",
+        speech: "Muzium Samudera ialah sebuah replika kapal perang Portugis terkenal iaitu Flora de la Mar. Kapal asal tersebut telah karam di perairan Melaka pada tahun 1511 semasa dalam perjalanan membawa khazanah harta karun ke Portugal."
+      },
+      "Stadthuys": {
+        url: "https://ms.wikipedia.org/wiki/Stadthuys",
+        speech: "Stadthuys dibina oleh penjajah Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi gabenor Belanda. Ia terkenal dengan warna merah terakota ikonik di kawasan Bangunan Merah."
+      },
+      "Kampung Morten": {
+        url: "https://ms.wikipedia.org/wiki/Kampung_Morten",
+        speech: "Kampung Morten ialah perkampungan tradisional Melayu yang digazetkan sebagai muzium hidup di tebing Sungai Melaka. Perkampungan ini memaparkan keindahan seni bina rumah panggung klasik Melayu Melaka."
+      },
+      "Portugis": {
+        url: "https://ms.wikipedia.org/wiki/Pencerobohan_Portugis_ke_atas_Melaka",
+        speech: "Portugis menyerang dan menguasai Melaka pada tahun 1511 di bawah pimpinan Alfonso de Albuquerque bagi mengawal laluan perdagangan rempah di Selat Melaka."
+      }
+    },
+    "en-US": {
+      "A Famosa": {
+        url: "https://en.wikipedia.org/wiki/A_Famosa",
+        speech: "A Famosa is a former Portuguese fortress built in Malacca in 1511 under Alfonso de Albuquerque. It is among the oldest surviving European architectural remains in Southeast Asia."
+      },
+      "Muzium Samudera": {
+        url: "https://en.wikipedia.org/wiki/Maritime_Museum_(Malacca)",
+        speech: "The Maritime Museum is a replica of the famous Portuguese ship Flora de la Mar, which sank off the coast of Malacca in 1511 carrying rich treasures."
+      },
+      "Stadthuys": {
+        url: "https://en.wikipedia.org/wiki/Stadthuys",
+        speech: "The Stadthuys was built by the Dutch in 1650 as the official residence of the Dutch governor. It is known for its iconic terracotta red exterior."
+      },
+      "Kampung Morten": {
+        url: "https://en.wikipedia.org/wiki/Morten_Village",
+        speech: "Kampung Morten is a historical Malay village functioning as a living museum along the Malacca River, famous for traditional wooden stilt houses."
+      },
+      "Portugis": {
+        url: "https://en.wikipedia.org/wiki/Portuguese_Malacca",
+        speech: "The Portuguese invaded and captured Malacca in 1511 to control the spice trade route in the Straits of Malacca."
+      }
+    },
+    "zh-CN": {
+      "A Famosa": {
+        url: "https://zh.wikipedia.org/wiki/%E6%B3%95%E6%91%A9%E6%B2%99%E5%A0%A1",
+        speech: "法摩沙堡是由阿方索·德·阿尔布克尔克领导的葡萄牙人于 1511 年在马六甲建造的古老城堡，是东南亚最古老的欧洲建筑遗迹之一。"
+      },
+      "Muzium Samudera": {
+        url: "https://zh.wikipedia.org/wiki/%E9%A9%AC%E5%85%AD%E7%94%B5%E6%B5%B7%E4%BA%8B%E5%8D%9A%E7%89%A9%E9%A6%86",
+        speech: "海事博物馆是著名葡萄牙战舰‘海洋之花号’的复制品，该船于 1511 年在马六甲海岸附近沉没，载有大量宝藏。"
+      },
+      "Stadthuys": {
+        url: "https://zh.wikipedia.org/wiki/%E8%8D%B7%E5%85%B0%E7%BA%A2%E5%B1%8B",
+        speech: "荷兰红屋由荷兰人于 1650 年建造，是荷兰总督的官方官邸，以其标志性的红砖外墙而闻名。"
+      },
+      "Kampung Morten": {
+        url: "https://zh.wikipedia.org/wiki/%E6%91%A9%E7%99%BB%E7%94%98%E6%A6%9C",
+        speech: "摩登甘榜是马六甲河畔的一个传统马来村庄，充当活体博物馆，以展示传统高脚木屋而闻名。"
+      },
+      "Portugis": {
+        url: "https://zh.wikipedia.org/wiki/%E8%90%84%E8%90%84%E7%89%99%E7%94%A1%E9%A9%AC%E5%85%AD%E7%94%B5",
+        speech: "葡萄牙人于 1511 年入侵并占领了马六甲，旨在控制马六甲海峡的香料贸易路线。"
+      }
+    },
+    "ta-IN": {
+      "A Famosa": {
+        url: "https://ta.wikipedia.org/wiki/%E0%AE%8F_%E0%AE%AA%E0%AE%BE%E0%AE%AE%E0%AF%8B%E0%AE%9A%E0%AE%BE",
+        speech: "ஏ பாமோசா என்பது 1511 இல் போர்த்துகீசியர்களால் கட்டப்பட்ட ஒரு வரலாற்று கோட்டையாகும். இது தென்கிழக்கு ஆசியாவில் உள்ள பழமையான ஐரோப்பிய கட்டிடக்கலை எச்சங்களில் ஒன்றாகும்."
+      },
+      "Muzium Samudera": {
+        url: "https://ms.wikipedia.org/wiki/Muzium_Samudera",
+        speech: "கடற்படை அருங்காட்சியகம் என்பது புகழ்பெற்ற போர்த்துகீசிய கப்பலான புளோரா டி லா மாரின் பிரதியாகும்."
+      },
+      "Stadthuys": {
+        url: "https://en.wikipedia.org/wiki/Stadthuys",
+        speech: "ஸ்டாட்ஹுய்ஸ் 1650 இல் டச்சுக்காரர்களால் கட்டப்பட்ட டச்சு ஆளுநரின் அதிகாரப்பூர்வ இல்லமாகும்."
+      },
+      "Kampung Morten": {
+        url: "https://ms.wikipedia.org/wiki/Kampung_Morten",
+        speech: "கம்போங் மோர்டன் என்பது மலாக்கா ஆற்றின் ஓரத்தில் உள்ள ஒரு பாரம்பரிய மலாய் கிராமமாகும்."
+      },
+      "Portugis": {
+        url: "https://ms.wikipedia.org/wiki/Pencerobohan_Portugis_ke_atas_Melaka",
+        speech: "போர்த்துகீசியர்கள் 1511 இல் மலாக்கா ஜலசந்தியில் நறுமணப் பொருட்கள் வர்த்தகப் பாதையைக் கட்டுப்படுத்த கைப்பற்றினர்."
+      }
+    }
+  };
+
+  function applyLanguageTranslation(langCode) {
+    const t = translations[langCode] || translations["ms-MY"];
+    
+    document.getElementById('txtStep2').innerText = t.step2Title;
+    document.getElementById('btnChild').innerText = t.btnChild;
+    document.getElementById('btnAdult').innerText = t.btnAdult;
+    document.getElementById('btnSenior').innerText = t.btnSenior;
+
+    document.getElementById('txtStep3').innerText = t.step3Title;
+    document.getElementById('btnDest1').innerText = t.dest1;
+    document.getElementById('btnDest2').innerText = t.dest2;
+    document.getElementById('btnDest3').innerText = t.dest3;
+    document.getElementById('btnDest4').innerText = t.dest4;
+
+    document.getElementById('textInput').placeholder = t.placeholder;
+    document.getElementById('btnSend').innerText = t.btnSend;
+
+    document.getElementById('btnReadForMe').innerText = t.readForMe;
+    document.getElementById('btnReadSelf').innerText = t.readSelf;
+    document.getElementById('btnCloseWeb').innerText = t.closeWeb;
+  }
+
+  function setLanguage(code, name) {
+    visitorData.langCode = code; 
+    visitorData.langName = name;
+    
+    // PENUKARAN TEKS MENU UI DAN SUARA BAHASA AUTOMATIK
+    applyLanguageTranslation(code);
+
+    document.getElementById('stepLang').classList.add('hidden');
+    document.getElementById('stepAge').classList.remove('hidden');
+    
+    const t = translations[code] || translations["ms-MY"];
+    speakText(t.selectAgeMsg);
+  }
+
+  function setAgeCategory(age) {
+    visitorData.ageGroup = age;
+    document.getElementById('stepAge').classList.add('hidden');
+    document.getElementById('stepMainUI').classList.remove('hidden');
+    document.getElementById('userInfo').innerText = `${visitorData.langName} | ${visitorData.ageGroup}`;
+    
+    const t = translations[visitorData.langCode] || translations["ms-MY"];
+    speakText(t.profileSetMsg);
+  }
+
   function unlockSystemAndStart() {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance("");
@@ -492,7 +654,7 @@
     const cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
     
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = visitorData.langCode;
+    utterance.lang = visitorData.langCode; // TUKAR BAHASA SUARA ROBOT DENGAN TEPAT
     utterance.volume = 1.0;
     utterance.rate = visitorData.ageGroup === "Warga Emas" ? 0.85 : 0.95;
 
@@ -547,29 +709,17 @@
     document.getElementById('statusBadge').innerText = "VISITOR DETECTED";
     document.getElementById('stepLang').classList.remove('hidden');
     
-    // WELCOME VOICE & PILIH BAHASA AUTOMATIK
-    speakText("Hello! Selamat datang ke CulturaBot Melaka. Sila pilih bahasa pilihan anda pada skrin di bawah.");
-  }
-
-  function setLanguage(code, name) {
-    visitorData.langCode = code; visitorData.langName = name;
-    document.getElementById('stepLang').classList.add('hidden');
-    document.getElementById('stepAge').classList.remove('hidden');
-    speakText("Sila pilih kategori umur anda.");
-  }
-
-  function setAgeCategory(age) {
-    visitorData.ageGroup = age;
-    document.getElementById('stepAge').classList.add('hidden');
-    document.getElementById('stepMainUI').classList.remove('hidden');
-    document.getElementById('userInfo').innerText = `${visitorData.langName} | ${visitorData.ageGroup}`;
-    speakText("Profil ditetapkan. Sila pilih destinasi atau taip soalan anda.");
+    const t = translations["ms-MY"];
+    speakText(t.welcomeMsg);
   }
 
   function selectDestination(place) {
     visitorData.destination = place;
-    if (realWebsites[place]) {
-      const data = realWebsites[place];
+    const langKey = visitorData.langCode;
+    const langDict = realWebsites[langKey] || realWebsites["ms-MY"];
+    
+    if (langDict[place]) {
+      const data = langDict[place];
       openRealWebModal(data.url, data.speech);
     }
   }
@@ -580,8 +730,8 @@
     document.getElementById('realWebModal').classList.remove('hidden');
     
     fullArticleText = speechText;
-    // BERTANYA SAMA ADA NAK BACA SENDIRI ATAU VOICE ASSISTANT
-    speakText("Laman web dibuka. Anda boleh menekan butang 'Baca Untuk Saya' untuk mendengar penerangan penuh, atau membaca secara sendiri.");
+    const t = translations[visitorData.langCode] || translations["ms-MY"];
+    speakText(t.webOpenMsg);
   }
 
   function readFullContent() {
@@ -613,25 +763,27 @@
 
   function processAIQuery(queryText) {
     const queryLower = queryText.toLowerCase();
+    const langKey = visitorData.langCode;
+    const langDict = realWebsites[langKey] || realWebsites["ms-MY"];
 
-    if (queryLower.includes("portugis") || queryLower.includes("kenapa")) {
-      const data = realWebsites["Portugis"];
+    if (queryLower.includes("portugis") || queryLower.includes("kenapa") || queryLower.includes("portuguese") || queryLower.includes("why")) {
+      const data = langDict["Portugis"];
       openRealWebModal(data.url, data.speech);
     } else if (queryLower.includes("famosa")) {
-      const data = realWebsites["A Famosa"];
+      const data = langDict["A Famosa"];
       openRealWebModal(data.url, data.speech);
-    } else if (queryLower.includes("samudera") || queryLower.includes("kapal") || queryLower.includes("flora")) {
-      const data = realWebsites["Muzium Samudera"];
+    } else if (queryLower.includes("samudera") || queryLower.includes("kapal") || queryLower.includes("maritime") || queryLower.includes("ship")) {
+      const data = langDict["Muzium Samudera"];
       openRealWebModal(data.url, data.speech);
-    } else if (queryLower.includes("stadthuys") || queryLower.includes("merah")) {
-      const data = realWebsites["Stadthuys"];
+    } else if (queryLower.includes("stadthuys") || queryLower.includes("merah") || queryLower.includes("red")) {
+      const data = langDict["Stadthuys"];
       openRealWebModal(data.url, data.speech);
-    } else if (queryLower.includes("morten") || queryLower.includes("kampung")) {
-      const data = realWebsites["Kampung Morten"];
+    } else if (queryLower.includes("morten") || queryLower.includes("kampung") || queryLower.includes("village")) {
+      const data = langDict["Kampung Morten"];
       openRealWebModal(data.url, data.speech);
     } else {
       const searchUrl = `https://ms.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(queryText)}`;
-      openRealWebModal(searchUrl, `Laman web carian untuk ${queryText} telah dibuka. Anda boleh membaca maklumat terperinci pada skrin.`);
+      openRealWebModal(searchUrl, `Laman web carian untuk ${queryText} telah dibuka.`);
     }
   }
 
@@ -697,6 +849,7 @@
     closeRealWebModal();
     isVisitorDetected = false;
     visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
+    applyLanguageTranslation("ms-MY");
     document.getElementById('stepLang').classList.add('hidden');
     document.getElementById('stepAge').classList.add('hidden');
     document.getElementById('stepMainUI').classList.add('hidden');
