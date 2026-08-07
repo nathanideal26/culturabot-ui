@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CulturaBot Real Web Edition v15.0</title>
+  <title>CulturaBot Giant Interactive v16.0</title>
   <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
 
   <style>
@@ -80,7 +80,7 @@
       cursor: pointer;
     }
 
-    /* STRUKTUR ROBOT & KAMERA */
+    /* ROBOT & BINGKAI KAMERA GERGASI */
     .robot-body-wrapper {
       display: flex;
       flex-direction: column;
@@ -92,23 +92,24 @@
     }
 
     .robot-head-svg {
-      width: 220px !important;
-      height: 110px !important;
+      width: 260px !important;
+      height: 130px !important;
       filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.6));
       margin-bottom: -10px;
       z-index: 2;
     }
 
+    /* BINGKAI KAMERA DIPERBESARKAN DRASTIK */
     .robot-chest-scanner {
       position: relative;
-      width: 90% !important;
-      max-width: 650px !important;
-      height: 300px !important;
+      width: 95% !important;
+      max-width: 700px !important;
+      height: 360px !important; /* SKRIN GERGASI IPAD */
       background: #000;
       border: 4px solid var(--accent-cyan) !important;
-      border-radius: 26px;
+      border-radius: 28px;
       overflow: hidden;
-      box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+      box-shadow: 0 0 35px rgba(6, 182, 212, 0.5);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -117,18 +118,29 @@
     #webcam { width: 100%; height: 100%; object-fit: cover; }
     #overlayCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
+    .unlock-overlay {
+      position: absolute;
+      width: 100%; height: 100%;
+      background: rgba(17, 24, 39, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+
     .status-badge {
-      padding: 6px 22px !important;
+      padding: 8px 24px !important;
       background: rgba(6, 182, 212, 0.2);
       border: 2px solid var(--accent-cyan);
       color: var(--accent-cyan);
       border-radius: 20px;
-      font-size: 15px !important;
+      font-size: 16px !important;
       font-weight: 800;
       margin-top: 6px;
     }
 
-    /* MODAL LAMAN WEB SEBENAR (REAL WEB BROWSER VIEW) */
+    /* MODAL LAMAN WEB SEBENAR WITH VOICE SELECTION BAR */
     .real-web-modal {
       position: fixed;
       top: 0; left: 0;
@@ -156,12 +168,13 @@
 
     .web-bar {
       background: #1e293b;
-      padding: 10px 16px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid #334155;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .url-display {
@@ -177,18 +190,28 @@
       text-overflow: ellipsis;
     }
 
+    .btn-voice-opt {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     .btn-close-web {
       background: var(--accent-red);
       color: white;
       border: none;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 10px;
       font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    /* IFRAME LAMAN WEB SEBENAR */
     .web-frame {
       width: 100%;
       height: 100%;
@@ -205,7 +228,7 @@
     }
 
     .step-title {
-      font-size: 16px !important;
+      font-size: 17px !important;
       color: var(--accent-cyan);
       margin-bottom: 10px;
       text-align: center;
@@ -222,9 +245,9 @@
       background: #1f2937 !important;
       color: white !important;
       border: 2px solid #374151 !important;
-      padding: 18px 12px !important;
+      padding: 20px 12px !important;
       border-radius: 16px !important;
-      font-size: 18px !important;
+      font-size: 19px !important;
       font-weight: 800 !important;
       cursor: pointer;
       display: flex;
@@ -253,7 +276,7 @@
       color: white;
       padding: 14px;
       border-radius: 14px;
-      font-size: 17px !important;
+      font-size: 18px !important;
     }
 
     .btn-mic {
@@ -283,7 +306,7 @@
       color: white;
       padding: 14px 24px !important;
       border-radius: 14px;
-      font-size: 17px !important;
+      font-size: 18px !important;
       font-weight: bold;
       cursor: pointer;
     }
@@ -324,25 +347,28 @@
     </div>
   </div>
 
-  <!-- POP-UP BROWSER LAMAN WEB SEBENAR (REAL WEB VIEW) -->
+  <!-- BROWSER LAMAN WEB SEBENAR WITH CHOICE MODES -->
   <div id="realWebModal" class="real-web-modal hidden">
     <div class="real-web-container">
       <div class="web-bar">
-        <div class="url-display" id="urlDisplay">https://ms.wikipedia.org/wiki/A_Famosa</div>
-        <button style="background:#0284c7; color:#fff; border:none; padding:8px 14px; border-radius:10px; font-weight:bold;" onclick="replayAudio()">🔊 Ulang Suara</button>
-        <button class="btn-close-web" onclick="closeRealWebModal()">❌ Tutup Web</button>
+        <div class="url-display" id="urlDisplay">https://ms.wikipedia.org/wiki/Kota_A_Famosa</div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-voice-opt" style="background:#10b981;" onclick="readFullContent()">🔊 Baca Untuk Saya</button>
+          <button class="btn-voice-opt" style="background:#374151;" onclick="readSelfMode()">📖 Saya Baca Sendiri</button>
+          <button class="btn-close-web" onclick="closeRealWebModal()">❌ Tutup Web</button>
+        </div>
       </div>
       <iframe id="webIframe" class="web-frame" src=""></iframe>
     </div>
   </div>
 
-  <!-- HEADER -->
+  <!-- HEADER NAVIGASI -->
   <div class="header">
     <div class="nav-group">
       <button class="btn-nav-home" onclick="resetToHome()">🏠 HOME</button>
       <button class="btn-nav-reset" onclick="returnRobotToBase()">🤖 RESET ROBOT</button>
     </div>
-    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v15.0</span>
+    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v16.0</span>
     <div>
       <span id="userInfo" style="font-size: 13px; color: #9ca3af; margin-right: 8px;">Belum Didaftar</span>
       <button class="btn-key" onclick="showKeyModal()">Key</button>
@@ -361,13 +387,20 @@
       <path id="mouthLine" d="M 68 82 Q 100 108 132 82" stroke="#06b6d4" stroke-width="5" stroke-linecap="round" fill="none"/>
     </svg>
 
-    <!-- DADA SCANNER GERGASI -->
+    <!-- BINGKAI KAMERA GERGASI IPAD -->
     <div class="robot-chest-scanner">
       <video id="webcam" autoplay playsinline muted></video>
       <canvas id="overlayCanvas"></canvas>
+
+      <!-- UNLOCK TOUCH OVERLAY FOR SAFARI AUDIO -->
+      <div id="unlockOverlay" class="unlock-overlay">
+        <button class="btn-option" style="background:#0284c7 !important; padding:22px 30px !important; font-size:22px !important;" onclick="unlockSystemAndStart()">
+          👆 SENTUH SKRIN UNTUK MULA<br><span style="font-size:14px; font-weight:normal;">(Tap Screen to Activate AI Voice)</span>
+        </button>
+      </div>
     </div>
 
-    <div class="status-badge" id="statusBadge">AUTOMATIC SCANNING...</div>
+    <div class="status-badge" id="statusBadge">STANDBY MODE</div>
   </div>
 
   <!-- PANEL MENU KAWALAN -->
@@ -412,55 +445,44 @@
   let GEMINI_API_KEY = localStorage.getItem("AQ.Ab8RN6LXnY0G0KnmbQLLPIieckuQ27WvcXfo4DRpaJtclFmuew") || "";
   let isVisitorDetected = false;
   let recognition = null;
-  let currentSpeakingText = "";
+  let fullArticleText = "";
   
   let visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
 
-  // PAUTAN LAMAN WEB SEBENAR (REAL WEBSITES)
   const realWebsites = {
     "A Famosa": {
       url: "https://ms.wikipedia.org/wiki/Kota_A_Famosa",
-      speech: "Kota A Famosa dibina oleh pihak Portugis pada tahun 1511 selepas menakluki Kesultanan Melayu Melaka. Ia merupakan kubu pertahanan Eropah tertua di Asia."
+      speech: "Kota A Famosa dibina oleh pihak Portugis pada tahun 1511 di bawah pimpinan Alfonso de Albuquerque selepas menakluki Kesultanan Melayu Melaka. Kota ini merupakan kubu pertahanan Eropah tertua yang masih wujud di rantau Asia Tenggara. Pintu gerbang Kota Porta de Santiago ini telah diselamatkan oleh Sir Stamford Raffles pada tahun 1810 daripada dimusnahkan oleh pihak British."
     },
     "Muzium Samudera": {
       url: "https://ms.wikipedia.org/wiki/Muzium_Samudera",
-      speech: "Muzium Samudera ialah replika kapal Portugis Flora de la Mar yang karam di perairan Melaka, menempatkan liputan warisan maritim."
+      speech: "Muzium Samudera ialah sebuah replika kapal perang Portugis terkenal iaitu Flora de la Mar. Kapal asal tersebut telah karam di perairan Melaka pada tahun 1511 semasa dalam perjalanan membawa khazanah harta karun ke Portugal. Muzium ini menempatkan pelbagai model pameran perdagangan pelabuhan dan warisan maritim Melaka."
     },
     "Stadthuys": {
       url: "https://ms.wikipedia.org/wiki/Stadthuys",
-      speech: "Stadthuys dibina oleh Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi gabenor, terkenal dengan warna merah terakota ikonik."
+      speech: "Stadthuys dibina oleh penjajah Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi gabenor Belanda. Ia terkenal dengan warna merah terakota ikonik di kawasan Bangunan Merah. Stadthuys merupakan bangunan pentadbiran Belanda tertua yang masih berdiri kukuh di rantau Asia Tenggara."
     },
     "Kampung Morten": {
-      title: "Kampung Morten",
       url: "https://ms.wikipedia.org/wiki/Kampung_Morten",
-      speech: "Kampung Morten ialah perkampungan tradisional Melayu di tebing Sungai Melaka yang kaya dengan seni bina rumah panggung klasik."
+      speech: "Kampung Morten ialah perkampungan tradisional Melayu yang digazetkan sebagai muzium hidup di tebing Sungai Melaka. Perkampungan ini memaparkan keindahan seni bina rumah panggung klasik Melayu Melaka, dan dinamakan sempena pegawai British J.F. Morten."
     },
     "Portugis": {
       url: "https://ms.wikipedia.org/wiki/Pencerobohan_Portugis_ke_atas_Melaka",
-      speech: "Portugis menyerang dan menguasai Melaka pada tahun 1511 di bawah Alfonso de Albuquerque untuk menguasai perdagangan rempah di Selat Melaka."
+      speech: "Portugis menyerang dan menguasai Melaka pada tahun 1511 di bawah pimpinan Alfonso de Albuquerque bagi mengawal laluan perdagangan rempah di Selat Melaka. Penjajahan Portugis berlarutan selama 130 tahun sehingga dikalahkan oleh pihak Belanda pada tahun 1641."
     }
   };
 
-  function openRealWebModal(url, speechText) {
-    document.getElementById('urlDisplay').innerText = url;
-    document.getElementById('webIframe').src = url;
-    document.getElementById('realWebModal').classList.remove('hidden');
-    
-    currentSpeakingText = speechText;
-    speakText(speechText);
-  }
-
-  function closeRealWebModal() {
-    document.getElementById('realWebModal').classList.add('hidden');
-    document.getElementById('webIframe').src = "";
+  /* UNLOCK AUDIO DENGAN SENTUHAN PERTAMA IPAD */
+  function unlockSystemAndStart() {
     window.speechSynthesis.cancel();
-    setRobotFace("HAPPY");
-  }
+    const u = new SpeechSynthesisUtterance("");
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
 
-  function replayAudio() {
-    if (currentSpeakingText) {
-      speakText(currentSpeakingText);
-    }
+    document.getElementById('unlockOverlay').classList.add('hidden');
+    document.getElementById('statusBadge').innerText = "SCANNING FOR VISITOR...";
+    
+    startCameraScanner();
   }
 
   function speakText(text) {
@@ -479,8 +501,7 @@
     setRobotFace("SPEAK");
   }
 
-  // AUTO-START KAMERA SEBAIK SAHAJA LOAD
-  async function autoStartCamera() {
+  async function startCameraScanner() {
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('overlayCanvas');
     
@@ -517,16 +538,17 @@
       }, 500);
 
     } catch (err) {
-      console.log("Kamera memerlukan kebenaran.");
+      alert("Sila benarkan kebenaran kamera di Safari iPad.");
     }
   }
 
   function onVisitorAutoDetected() {
     setRobotFace("HAPPY");
+    document.getElementById('statusBadge').innerText = "VISITOR DETECTED";
     document.getElementById('stepLang').classList.remove('hidden');
     
-    // SUARA WELCOME AUTOMATIK SEBAIK MUKA DIKESAN
-    speakText("Hello! Selamat datang ke CulturaBot Melaka. Sila pilih bahasa pilihan anda pada skrin.");
+    // WELCOME VOICE & PILIH BAHASA AUTOMATIK
+    speakText("Hello! Selamat datang ke CulturaBot Melaka. Sila pilih bahasa pilihan anda pada skrin di bawah.");
   }
 
   function setLanguage(code, name) {
@@ -541,7 +563,7 @@
     document.getElementById('stepAge').classList.add('hidden');
     document.getElementById('stepMainUI').classList.remove('hidden');
     document.getElementById('userInfo').innerText = `${visitorData.langName} | ${visitorData.ageGroup}`;
-    speakText("Profil ditetapkan. Sila pilih destinasi atau taip soalan.");
+    speakText("Profil ditetapkan. Sila pilih destinasi atau taip soalan anda.");
   }
 
   function selectDestination(place) {
@@ -549,6 +571,67 @@
     if (realWebsites[place]) {
       const data = realWebsites[place];
       openRealWebModal(data.url, data.speech);
+    }
+  }
+
+  function openRealWebModal(url, speechText) {
+    document.getElementById('urlDisplay').innerText = url;
+    document.getElementById('webIframe').src = url;
+    document.getElementById('realWebModal').classList.remove('hidden');
+    
+    fullArticleText = speechText;
+    // BERTANYA SAMA ADA NAK BACA SENDIRI ATAU VOICE ASSISTANT
+    speakText("Laman web dibuka. Anda boleh menekan butang 'Baca Untuk Saya' untuk mendengar penerangan penuh, atau membaca secara sendiri.");
+  }
+
+  function readFullContent() {
+    if (fullArticleText) {
+      speakText(fullArticleText);
+    }
+  }
+
+  function readSelfMode() {
+    window.speechSynthesis.cancel();
+    setRobotFace("HAPPY");
+  }
+
+  function closeRealWebModal() {
+    document.getElementById('realWebModal').classList.add('hidden');
+    document.getElementById('webIframe').src = "";
+    window.speechSynthesis.cancel();
+    setRobotFace("HAPPY");
+  }
+
+  function sendTextQuery() {
+    const inputField = document.getElementById('textInput');
+    const text = inputField.value.trim();
+    if (!text) return;
+    
+    inputField.value = "";
+    processAIQuery(text);
+  }
+
+  function processAIQuery(queryText) {
+    const queryLower = queryText.toLowerCase();
+
+    if (queryLower.includes("portugis") || queryLower.includes("kenapa")) {
+      const data = realWebsites["Portugis"];
+      openRealWebModal(data.url, data.speech);
+    } else if (queryLower.includes("famosa")) {
+      const data = realWebsites["A Famosa"];
+      openRealWebModal(data.url, data.speech);
+    } else if (queryLower.includes("samudera") || queryLower.includes("kapal") || queryLower.includes("flora")) {
+      const data = realWebsites["Muzium Samudera"];
+      openRealWebModal(data.url, data.speech);
+    } else if (queryLower.includes("stadthuys") || queryLower.includes("merah")) {
+      const data = realWebsites["Stadthuys"];
+      openRealWebModal(data.url, data.speech);
+    } else if (queryLower.includes("morten") || queryLower.includes("kampung")) {
+      const data = realWebsites["Kampung Morten"];
+      openRealWebModal(data.url, data.speech);
+    } else {
+      const searchUrl = `https://ms.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(queryText)}`;
+      openRealWebModal(searchUrl, `Laman web carian untuk ${queryText} telah dibuka. Anda boleh membaca maklumat terperinci pada skrin.`);
     }
   }
 
@@ -587,66 +670,26 @@
     try { recognition.start(); } catch (err) { micBtn.classList.remove('listening'); }
   }
 
-  function sendTextQuery() {
-    const inputField = document.getElementById('textInput');
-    const text = inputField.value.trim();
-    if (!text) return;
-    
-    inputField.value = "";
-    processAIQuery(text);
-  }
-
-  function processAIQuery(queryText) {
-    const queryLower = queryText.toLowerCase();
-
-    // BUKA BROWSER LAMAN WEB SEBENAR BERDASARKAN SOALAN
-    if (queryLower.includes("portugis") || queryLower.includes("kenapa")) {
-      const data = realWebsites["Portugis"];
-      openRealWebModal(data.url, data.speech);
-    } else if (queryLower.includes("famosa")) {
-      const data = realWebsites["A Famosa"];
-      openRealWebModal(data.url, data.speech);
-    } else if (queryLower.includes("samudera") || queryLower.includes("kapal") || queryLower.includes("flora")) {
-      const data = realWebsites["Muzium Samudera"];
-      openRealWebModal(data.url, data.speech);
-    } else if (queryLower.includes("stadthuys") || queryLower.includes("merah")) {
-      const data = realWebsites["Stadthuys"];
-      openRealWebModal(data.url, data.speech);
-    } else if (queryLower.includes("morten") || queryLower.includes("kampung")) {
-      const data = realWebsites["Kampung Morten"];
-      openRealWebModal(data.url, data.speech);
-    } else {
-      const searchUrl = `https://ms.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(queryText)}`;
-      openRealWebModal(searchUrl, `Mencari maklumat mengenai ${queryText} di ensiklopedia warisan.`);
-    }
-  }
-
   function setRobotFace(state) {
     const eyeL = document.getElementById('eyeLeft');
     const eyeR = document.getElementById('eyeRight');
     const mouth = document.getElementById('mouthLine');
-    const badge = document.getElementById('statusBadge');
 
     if (state === "SLEEP") {
       eyeL.setAttribute('fill', '#374151'); eyeR.setAttribute('fill', '#374151');
       mouth.setAttribute('d', 'M 75 85 Q 100 85 125 85');
-      badge.innerText = "STANDBY MODE";
     } else if (state === "SEARCH") {
       eyeL.setAttribute('fill', '#0284c7'); eyeR.setAttribute('fill', '#0284c7');
       mouth.setAttribute('d', 'M 75 85 Q 100 85 125 85');
-      badge.innerText = "AUTOMATIC SCANNING...";
     } else if (state === "HAPPY") {
       eyeL.setAttribute('fill', '#06b6d4'); eyeR.setAttribute('fill', '#06b6d4');
       mouth.setAttribute('d', 'M 68 82 Q 100 108 132 82');
-      badge.innerText = "VISITOR DETECTED";
     } else if (state === "THINK") {
       eyeL.setAttribute('fill', '#f59e0b'); eyeR.setAttribute('fill', '#f59e0b');
       mouth.setAttribute('d', 'M 80 88 Q 100 80 120 88');
-      badge.innerText = "AI PROCESSING...";
     } else if (state === "SPEAK") {
       eyeL.setAttribute('fill', '#10b981'); eyeR.setAttribute('fill', '#10b981');
       mouth.setAttribute('d', 'M 68 78 Q 100 115 132 78');
-      badge.innerText = "ROBOT SPEAKING";
     }
   }
 
@@ -667,9 +710,27 @@
     openRealWebModal("https://ms.wikipedia.org/wiki/Melaka", "Isyarat Bluetooth dihantar! Robot SPIKE Prime sedang bergerak kembali ke garisan permulaan.");
   }
 
-  window.onload = () => {
-    autoStartCamera();
-  };
+  function checkApiKey() {
+    if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") {
+      document.getElementById('keyModal').classList.remove('hidden');
+    } else {
+      document.getElementById('keyModal').classList.add('hidden');
+    }
+  }
+
+  function showKeyModal() { document.getElementById('keyModal').classList.remove('hidden'); }
+
+  function saveApiKey() {
+    const val = document.getElementById('apiKeyInput').value.trim();
+    if (val !== "") {
+      GEMINI_API_KEY = val;
+      localStorage.setItem("GEMINI_KEY", val);
+      document.getElementById('keyModal').classList.add('hidden');
+      alert("API Key disimpan!");
+    } else { alert("Masukkan API Key yang sah."); }
+  }
+
+  window.onload = checkApiKey;
 </script>
 
 </body>
