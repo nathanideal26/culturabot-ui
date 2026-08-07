@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CulturaBot Interactive Portal v14.0</title>
+  <title>CulturaBot Real Web Edition v15.0</title>
   <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
 
   <style>
@@ -33,6 +33,7 @@
       overflow: hidden;
     }
 
+    /* HEADER */
     .header {
       width: 100%;
       display: flex;
@@ -79,6 +80,7 @@
       cursor: pointer;
     }
 
+    /* STRUKTUR ROBOT & KAMERA */
     .robot-body-wrapper {
       display: flex;
       flex-direction: column;
@@ -101,7 +103,7 @@
       position: relative;
       width: 90% !important;
       max-width: 650px !important;
-      height: 280px !important;
+      height: 300px !important;
       background: #000;
       border: 4px solid var(--accent-cyan) !important;
       border-radius: 26px;
@@ -115,20 +117,6 @@
     #webcam { width: 100%; height: 100%; object-fit: cover; }
     #overlayCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-    .chest-standby-screen {
-      position: absolute;
-      width: 100%; height: 100%;
-      background: #111827;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-      color: var(--accent-cyan);
-      font-weight: bold;
-      font-size: 22px;
-    }
-
     .status-badge {
       padding: 6px 22px !important;
       background: rgba(6, 182, 212, 0.2);
@@ -140,8 +128,8 @@
       margin-top: 6px;
     }
 
-    /* POP-UP WEBSITE INFORMASI INTERAKTIF (FULL SCREEN MODAL) */
-    .info-website-modal {
+    /* MODAL LAMAN WEB SEBENAR (REAL WEB BROWSER VIEW) */
+    .real-web-modal {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
@@ -150,85 +138,62 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 15px;
+      padding: 10px;
     }
 
-    .info-website-container {
+    .real-web-container {
       width: 100%;
-      max-width: 800px;
-      height: 90vh;
+      max-width: 950px;
+      height: 92vh;
       background: #0f172a;
       border: 3px solid var(--accent-cyan);
-      border-radius: 24px;
+      border-radius: 20px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       box-shadow: 0 0 40px rgba(6, 182, 212, 0.4);
     }
 
-    .web-header {
+    .web-bar {
       background: #1e293b;
-      padding: 14px 20px;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid #334155;
+      gap: 10px;
     }
 
-    .web-title {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--accent-gold);
+    .url-display {
+      flex: 1;
+      background: #030712;
+      color: #38bdf8;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      border: 1px solid #334155;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .btn-close-web {
       background: var(--accent-red);
       color: white;
       border: none;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .web-content-scroll {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .web-visual-hero {
+    /* IFRAME LAMAN WEB SEBENAR */
+    .web-frame {
       width: 100%;
-      height: 220px;
-      background: #1e293b;
-      border-radius: 18px;
-      border: 2px solid var(--accent-cyan);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .web-body-text {
-      font-size: 20px;
-      line-height: 1.6;
-      color: #f8fafc;
-      background: #1e293b;
-      padding: 18px;
-      border-radius: 16px;
-      border-left: 4px solid var(--accent-gold);
-    }
-
-    .web-fact-box {
-      background: rgba(6, 182, 212, 0.1);
-      border: 2px dashed var(--accent-cyan);
-      padding: 16px;
-      border-radius: 16px;
-      font-size: 17px;
-      color: var(--accent-cyan);
+      height: 100%;
+      border: none;
+      background: #ffffff;
     }
 
     .panel-container {
@@ -359,37 +324,25 @@
     </div>
   </div>
 
-  <!-- POP-UP WEBSITE MAKLUAMAT INTERAKTIF -->
-  <div id="webModal" class="info-website-modal hidden">
-    <div class="info-website-container">
-      <div class="web-header">
-        <div class="web-title" id="webTitle">🌐 Portal Warisan Melaka</div>
-        <div style="display:flex; gap:10px;">
-          <button style="background:#0284c7; color:#fff; border:none; padding:10px 16px; border-radius:12px; font-weight:bold;" onclick="replayAudio()">🔊 Ulang Suara</button>
-          <button class="btn-close-web" onclick="closeWebModal()">❌ Tutup Web</button>
-        </div>
+  <!-- POP-UP BROWSER LAMAN WEB SEBENAR (REAL WEB VIEW) -->
+  <div id="realWebModal" class="real-web-modal hidden">
+    <div class="real-web-container">
+      <div class="web-bar">
+        <div class="url-display" id="urlDisplay">https://ms.wikipedia.org/wiki/A_Famosa</div>
+        <button style="background:#0284c7; color:#fff; border:none; padding:8px 14px; border-radius:10px; font-weight:bold;" onclick="replayAudio()">🔊 Ulang Suara</button>
+        <button class="btn-close-web" onclick="closeRealWebModal()">❌ Tutup Web</button>
       </div>
-      <div class="web-content-scroll">
-        <div class="web-visual-hero" id="webHeroSvg">
-          <!-- Hero SVG Visual -->
-        </div>
-        <div class="web-body-text" id="webBody">
-          Penerangan sejarah terperinci akan dipaparkan di sini.
-        </div>
-        <div class="web-fact-box" id="webFact">
-          💡 Fakta Menarik Sejarah
-        </div>
-      </div>
+      <iframe id="webIframe" class="web-frame" src=""></iframe>
     </div>
   </div>
 
-  <!-- HEADER NAVIGASI -->
+  <!-- HEADER -->
   <div class="header">
     <div class="nav-group">
       <button class="btn-nav-home" onclick="resetToHome()">🏠 HOME</button>
       <button class="btn-nav-reset" onclick="returnRobotToBase()">🤖 RESET ROBOT</button>
     </div>
-    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v14.0</span>
+    <span style="font-weight: bold; font-size: 16px; color: var(--accent-cyan);">CULTURABOT v15.0</span>
     <div>
       <span id="userInfo" style="font-size: 13px; color: #9ca3af; margin-right: 8px;">Belum Didaftar</span>
       <button class="btn-key" onclick="showKeyModal()">Key</button>
@@ -412,22 +365,13 @@
     <div class="robot-chest-scanner">
       <video id="webcam" autoplay playsinline muted></video>
       <canvas id="overlayCanvas"></canvas>
-      
-      <div id="chestStandby" class="chest-standby-screen">
-        <div style="font-size: 26px; color: var(--accent-cyan);">📷 CHEST SCANNER</div>
-        <div style="font-size: 15px; color: #9ca3af; margin-top: 6px;">Tekan 'Start Scan' Di Bawah</div>
-      </div>
     </div>
 
-    <div class="status-badge" id="statusBadge">STANDBY MODE</div>
+    <div class="status-badge" id="statusBadge">AUTOMATIC SCANNING...</div>
   </div>
 
   <!-- PANEL MENU KAWALAN -->
   <div class="panel-container">
-    <div id="stepStart">
-      <button class="btn-option" style="background: #0284c7 !important; padding: 22px !important; font-size: 20px !important;" onclick="startCamera()">📷 Aktifkan Kamera AI (Start Scan)</button>
-    </div>
-
     <div id="stepLang" class="hidden">
       <div class="step-title">LANGKAH 1: Sila Pilih Bahasa / Select Language / 请选择语言</div>
       <div class="grid-options">
@@ -472,63 +416,43 @@
   
   let visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
 
-  // GRAFIK VISUAL HERO SVG
-  const heroSvgs = {
-    afamosa: `<svg width="180" height="180" viewBox="0 0 100 100" fill="none"><rect x="20" y="40" width="60" height="50" fill="#f59e0b" stroke="#fff" stroke-width="2"/><path d="M 40 40 L 50 15 L 60 40 Z" fill="#ef4444"/><rect x="42" y="60" width="16" height="30" rx="8" fill="#030712"/><circle cx="50" cy="30" r="4" fill="#fff"/></svg>`,
-    samudera: `<svg width="180" height="180" viewBox="0 0 100 100" fill="none"><path d="M 10 65 Q 50 90 90 65 L 80 80 Q 50 95 20 80 Z" fill="#06b6d4"/><line x1="50" y1="20" x2="50" y2="65" stroke="#fff" stroke-width="4"/><path d="M 50 25 Q 75 40 50 55 Z" fill="#f59e0b"/><path d="M 50 25 Q 25 40 50 55 Z" fill="#f59e0b"/></svg>`,
-    stadthuys: `<svg width="180" height="180" viewBox="0 0 100 100" fill="none"><rect x="15" y="35" width="70" height="50" fill="#dc2626" stroke="#fff" stroke-width="2"/><polygon points="10,35 50,10 90,35" fill="#991b1b"/><rect x="42" y="55" width="16" height="30" fill="#030712"/><rect x="25" y="45" width="10" height="12" fill="#fef08a"/><rect x="65" y="45" width="10" height="12" fill="#fef08a"/></svg>`,
-    morten: `<svg width="180" height="180" viewBox="0 0 100 100" fill="none"><polygon points="15,45 50,20 85,45" fill="#b45309"/><rect x="25" y="45" width="50" height="35" fill="#d97706"/><line x1="25" y1="80" x2="25" y2="95" stroke="#fff" stroke-width="4"/><line x1="75" y1="80" x2="75" y2="95" stroke="#fff" stroke-width="4"/><rect x="42" y="55" width="16" height="25" fill="#78350f"/></svg>`,
-    portugis: `<svg width="180" height="180" viewBox="0 0 100 100" fill="none"><rect x="15" y="30" width="70" height="60" fill="#334155" stroke="#38bdf8" stroke-width="2"/><path d="M 35 30 L 35 15 L 65 15 L 65 30 Z" fill="#475569"/><circle cx="50" cy="50" r="12" fill="#ef4444"/><line x1="50" y1="40" x2="50" y2="60" stroke="#fff" stroke-width="4"/><line x1="40" y1="50" x2="60" y2="50" stroke="#fff" stroke-width="4"/></svg>`,
-    default: `<svg width="150" height="150" viewBox="0 0 100 100" fill="none"><rect x="15" y="20" width="70" height="60" rx="12" fill="#06b6d4" opacity="0.8"/><circle cx="35" cy="45" r="8" fill="#030712"/><circle cx="65" cy="45" r="8" fill="#030712"/><path d="M 35 65 Q 50 78 65 65" stroke="#030712" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`
-  };
-
-  // PANGKALAN DATA INFORMASI TERPERINCI
-  const webKnowledge = {
+  // PAUTAN LAMAN WEB SEBENAR (REAL WEBSITES)
+  const realWebsites = {
     "A Famosa": {
-      title: "🏰 Porta de Santiago (Kota A Famosa)",
-      body: "Kota A Famosa dibina oleh pihak Portugis pada tahun 1511 di bawah pimpinan Alfonso de Albuquerque selepas menakluki Kesultanan Melayu Melaka. Pintu gerbang Porta de Santiago ini merupakan antara satu-satunya struktur Eropah tertua yang masih wujud di Asia Tenggara. Ia berfungsi sebagai kubu pertahanan utama daripada serangan musuh.",
-      fact: "💡 Fakta Unik: Pintu gerbang bersejarah ini hampir dimusnahkan oleh pihak British pada tahun 1810, tetapi telah diselamatkan oleh Sir Stamford Raffles.",
-      svg: heroSvgs.afamosa
+      url: "https://ms.wikipedia.org/wiki/Kota_A_Famosa",
+      speech: "Kota A Famosa dibina oleh pihak Portugis pada tahun 1511 selepas menakluki Kesultanan Melayu Melaka. Ia merupakan kubu pertahanan Eropah tertua di Asia."
     },
     "Muzium Samudera": {
-      title: "⛵ Muzium Samudera (Flora de la Mar)",
-      body: "Muzium Samudera dibina berasaskan replika kapal Portugis terkenal, Flora de la Mar. Kapal asal ini telah karam di perairan Melaka pada tahun 1511 semasa dalam perjalanan membawa khazanah harta karun ke Portugal. Muzium ini memaparkan liputan lengkap mengenai sejarah kegemilangan perdagangan maritim Melaka.",
-      fact: "💡 Fakta Unik: Bangunan replika kapal ini berketinggian 34 meter dan menyimpan pelbagai model pameran perdagangan pelabuhan zaman dahulu.",
-      svg: heroSvgs.samudera
+      url: "https://ms.wikipedia.org/wiki/Muzium_Samudera",
+      speech: "Muzium Samudera ialah replika kapal Portugis Flora de la Mar yang karam di perairan Melaka, menempatkan liputan warisan maritim."
     },
     "Stadthuys": {
-      title: "🏛️ Bangunan Stadthuys (Bangunan Merah)",
-      body: "Stadthuys dibina oleh penjajah Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi gabenor Belanda. Ia terkenal dengan seni bina klasik Eropah bernuansa merah terakota. Di sekelilingnya terletak Gereja Christ Church dan menara jam ikonik Melaka.",
-      fact: "💡 Fakta Unik: Stadthuys merupakan bangunan pentadbiran Belanda tertua yang masih wujud secara kukuh di Asia.",
-      svg: heroSvgs.stadthuys
+      url: "https://ms.wikipedia.org/wiki/Stadthuys",
+      speech: "Stadthuys dibina oleh Belanda pada tahun 1650 sebagai pusat pentadbiran rasmi gabenor, terkenal dengan warna merah terakota ikonik."
     },
     "Kampung Morten": {
-      title: "🏡 Kampung Morten Melaka",
-      body: "Kampung Morten terletak di tebing Sungai Melaka di tengah-tengah pusat bandar raya. Ia merupakan sebuah perkampungan tradisional Melayu yang digazetkan sebagai muzium hidup, memaparkan keindahan seni bina rumah panggung klasik Melayu Melaka.",
-      fact: "💡 Fakta Unik: Diberi nama sempena J.F. Morten, seorang pegawai pentadbiran British pada zaman penjajahan.",
-      svg: heroSvgs.morten
+      title: "Kampung Morten",
+      url: "https://ms.wikipedia.org/wiki/Kampung_Morten",
+      speech: "Kampung Morten ialah perkampungan tradisional Melayu di tebing Sungai Melaka yang kaya dengan seni bina rumah panggung klasik."
     },
     "Portugis": {
-      title: "⚔️ Sejarah Penjajahan Portugis (1511)",
-      body: "Portugis menyerang Melaka pada tahun 1511 untuk menguasai laluan perdagangan rempah yang kaya di Selat Melaka. Penjajahan bermula di bawah panglima Alfonso de Albuquerque dan berlarutan selama 130 tahun sehingga dikalahkan oleh Belanda pada tahun 1641.",
-      fact: "💡 Fakta Unik: Peninggalan Portugis masih boleh dilihat pada bahasa, makanan (seperti Kapitan), dan penempatan Peranakan Portugis di Melaka.",
-      svg: heroSvgs.portugis
+      url: "https://ms.wikipedia.org/wiki/Pencerobohan_Portugis_ke_atas_Melaka",
+      speech: "Portugis menyerang dan menguasai Melaka pada tahun 1511 di bawah Alfonso de Albuquerque untuk menguasai perdagangan rempah di Selat Melaka."
     }
   };
 
-  function openWebModal(title, body, fact, svgCode) {
-    document.getElementById('webTitle').innerText = title;
-    document.getElementById('webBody').innerHTML = body;
-    document.getElementById('webFact').innerText = fact || "💡 Panduan Warisan CulturaBot";
-    document.getElementById('webHeroSvg').innerHTML = svgCode || heroSvgs.default;
+  function openRealWebModal(url, speechText) {
+    document.getElementById('urlDisplay').innerText = url;
+    document.getElementById('webIframe').src = url;
+    document.getElementById('realWebModal').classList.remove('hidden');
     
-    document.getElementById('webModal').classList.remove('hidden');
-    currentSpeakingText = body;
-    speakText(body);
+    currentSpeakingText = speechText;
+    speakText(speechText);
   }
 
-  function closeWebModal() {
-    document.getElementById('webModal').classList.add('hidden');
+  function closeRealWebModal() {
+    document.getElementById('realWebModal').classList.add('hidden');
+    document.getElementById('webIframe').src = "";
     window.speechSynthesis.cancel();
     setRobotFace("HAPPY");
   }
@@ -555,56 +479,14 @@
     setRobotFace("SPEAK");
   }
 
-  function checkApiKey() {
-    if (!GEMINI_API_KEY || GEMINI_API_KEY.trim() === "") {
-      document.getElementById('keyModal').classList.remove('hidden');
-    } else {
-      document.getElementById('keyModal').classList.add('hidden');
-    }
-  }
-
-  function showKeyModal() { document.getElementById('keyModal').classList.remove('hidden'); }
-
-  function saveApiKey() {
-    const val = document.getElementById('apiKeyInput').value.trim();
-    if (val !== "") {
-      GEMINI_API_KEY = val;
-      localStorage.setItem("GEMINI_KEY", val);
-      document.getElementById('keyModal').classList.add('hidden');
-      alert("API Key disimpan!");
-    } else { alert("Masukkan API Key yang sah."); }
-  }
-
-  function resetToHome() {
-    closeWebModal();
-    isVisitorDetected = false;
-    visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
-    document.getElementById('chestStandby').classList.remove('hidden');
-    document.getElementById('stepLang').classList.add('hidden');
-    document.getElementById('stepAge').classList.add('hidden');
-    document.getElementById('stepMainUI').classList.add('hidden');
-    document.getElementById('stepStart').classList.remove('hidden');
-    document.getElementById('userInfo').innerText = "Belum Didaftar";
-    setRobotFace("SLEEP");
-    window.speechSynthesis.cancel();
-  }
-
-  function returnRobotToBase() {
-    window.speechSynthesis.cancel();
-    openWebModal("🤖 Reset Robot SPIKE Prime", "Isyarat Bluetooth (BLE) telah dihantar! Robot CulturaBot kini sedang bergerak kembali ke tapak permulaan (Base Position).", "💡 Sistem Isyarat BLE Aktif", heroSvgs.default);
-  }
-
-  async function startCamera() {
-    checkApiKey();
+  // AUTO-START KAMERA SEBAIK SAHAJA LOAD
+  async function autoStartCamera() {
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('overlayCanvas');
     
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
       video.srcObject = stream;
-
-      document.getElementById('chestStandby').classList.add('hidden');
-      document.getElementById('stepStart').classList.add('hidden');
       setRobotFace("SEARCH");
 
       await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/');
@@ -635,14 +517,16 @@
       }, 500);
 
     } catch (err) {
-      alert("Benarkan akses kamera di Safari iPad (Settings > Safari > Camera > Allow).");
+      console.log("Kamera memerlukan kebenaran.");
     }
   }
 
   function onVisitorAutoDetected() {
     setRobotFace("HAPPY");
     document.getElementById('stepLang').classList.remove('hidden');
-    speakText("Hello! Selamat datang. Sila pilih bahasa pada skrin.");
+    
+    // SUARA WELCOME AUTOMATIK SEBAIK MUKA DIKESAN
+    speakText("Hello! Selamat datang ke CulturaBot Melaka. Sila pilih bahasa pilihan anda pada skrin.");
   }
 
   function setLanguage(code, name) {
@@ -662,10 +546,9 @@
 
   function selectDestination(place) {
     visitorData.destination = place;
-    
-    if (webKnowledge[place]) {
-      const data = webKnowledge[place];
-      openWebModal(data.title, data.body, data.fact, data.svg);
+    if (realWebsites[place]) {
+      const data = realWebsites[place];
+      openRealWebModal(data.url, data.speech);
     }
   }
 
@@ -716,25 +599,25 @@
   function processAIQuery(queryText) {
     const queryLower = queryText.toLowerCase();
 
-    // MATCHING TEPAT UNTUK MEMBUKA WEBPAGE INTERAKTIF
+    // BUKA BROWSER LAMAN WEB SEBENAR BERDASARKAN SOALAN
     if (queryLower.includes("portugis") || queryLower.includes("kenapa")) {
-      const data = webKnowledge["Portugis"];
-      openWebModal(data.title, data.body, data.fact, data.svg);
+      const data = realWebsites["Portugis"];
+      openRealWebModal(data.url, data.speech);
     } else if (queryLower.includes("famosa")) {
-      const data = webKnowledge["A Famosa"];
-      openWebModal(data.title, data.body, data.fact, data.svg);
+      const data = realWebsites["A Famosa"];
+      openRealWebModal(data.url, data.speech);
     } else if (queryLower.includes("samudera") || queryLower.includes("kapal") || queryLower.includes("flora")) {
-      const data = webKnowledge["Muzium Samudera"];
-      openWebModal(data.title, data.body, data.fact, data.svg);
+      const data = realWebsites["Muzium Samudera"];
+      openRealWebModal(data.url, data.speech);
     } else if (queryLower.includes("stadthuys") || queryLower.includes("merah")) {
-      const data = webKnowledge["Stadthuys"];
-      openWebModal(data.title, data.body, data.fact, data.svg);
+      const data = realWebsites["Stadthuys"];
+      openRealWebModal(data.url, data.speech);
     } else if (queryLower.includes("morten") || queryLower.includes("kampung")) {
-      const data = webKnowledge["Kampung Morten"];
-      openWebModal(data.title, data.body, data.fact, data.svg);
+      const data = realWebsites["Kampung Morten"];
+      openRealWebModal(data.url, data.speech);
     } else {
-      const genericReply = `Mengenai soalan "${queryText}", Melaka merupakan negeri bersejarah yang kaya dengan peninggalan warisan dunia serta kebudayaan yang unik.`;
-      openWebModal(`🌐 Hasil Carian: ${queryText}`, genericReply, "💡 Pemandu Warisan CulturaBot", heroSvgs.default);
+      const searchUrl = `https://ms.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(queryText)}`;
+      openRealWebModal(searchUrl, `Mencari maklumat mengenai ${queryText} di ensiklopedia warisan.`);
     }
   }
 
@@ -751,7 +634,7 @@
     } else if (state === "SEARCH") {
       eyeL.setAttribute('fill', '#0284c7'); eyeR.setAttribute('fill', '#0284c7');
       mouth.setAttribute('d', 'M 75 85 Q 100 85 125 85');
-      badge.innerText = "SCANNING FOR VISITOR...";
+      badge.innerText = "AUTOMATIC SCANNING...";
     } else if (state === "HAPPY") {
       eyeL.setAttribute('fill', '#06b6d4'); eyeR.setAttribute('fill', '#06b6d4');
       mouth.setAttribute('d', 'M 68 82 Q 100 108 132 82');
@@ -767,7 +650,26 @@
     }
   }
 
-  window.onload = checkApiKey;
+  function resetToHome() {
+    closeRealWebModal();
+    isVisitorDetected = false;
+    visitorData = { langCode: "ms-MY", langName: "Bahasa Melayu", ageGroup: "Dewasa", destination: "" };
+    document.getElementById('stepLang').classList.add('hidden');
+    document.getElementById('stepAge').classList.add('hidden');
+    document.getElementById('stepMainUI').classList.add('hidden');
+    document.getElementById('userInfo').innerText = "Belum Didaftar";
+    setRobotFace("SEARCH");
+    window.speechSynthesis.cancel();
+  }
+
+  function returnRobotToBase() {
+    window.speechSynthesis.cancel();
+    openRealWebModal("https://ms.wikipedia.org/wiki/Melaka", "Isyarat Bluetooth dihantar! Robot SPIKE Prime sedang bergerak kembali ke garisan permulaan.");
+  }
+
+  window.onload = () => {
+    autoStartCamera();
+  };
 </script>
 
 </body>
